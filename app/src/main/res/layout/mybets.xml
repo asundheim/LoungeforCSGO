@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mybets">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <TextView
+        android:text="Won"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_won"
+        android:textStyle="bold"
+        android:gravity="center" />
 
     <GridLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/won"
         android:rowCount="5"
-        android:columnCount="1">
+        android:columnCount="3"
+        >
 
     </GridLayout>
-</LinearLayout>
+
+    <TextView
+        android:text="Returned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_returned"
+        android:gravity="center"
+        android:textStyle="bold" />
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/returned"
+        android:rowCount="5"
+        android:columnCount="3"
+        >
+    </GridLayout>
+
+    </LinearLayout>
+</ScrollView>

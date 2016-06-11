@@ -52,7 +52,14 @@ public class JavaScriptInterface {
         String[] item_info = s.split("---");
         System.out.println(s);
         Globals g = (Globals)activity.getApplicationContext();
-        g.addWon(new ItemObject(item_info[0],item_info[1],item_info[2]));
+        g.addWon(new ItemObject(item_info[0],item_info[1],item_info[2],item_info[3],item_info[4]));
+    }
+    @JavascriptInterface
+    public void addReturned(String s){
+        String[] item_info = s.split("---");
+        System.out.println(s);
+        Globals g = (Globals)activity.getApplicationContext();
+        g.addReturned(new ItemObject(item_info[0],item_info[1],item_info[2],item_info[3],item_info[4]));
     }
     @JavascriptInterface
     public void passIt(){

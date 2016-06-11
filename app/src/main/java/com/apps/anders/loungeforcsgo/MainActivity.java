@@ -1,41 +1,29 @@
     package com.apps.anders.loungeforcsgo;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+//import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Ion;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
     public class MainActivity extends AppCompatActivity{
     WebView webview;
@@ -64,8 +52,9 @@ import java.util.ArrayList;
                     Globals globals = (Globals) getApplicationContext();
                     //globals.printMatch();
                     System.out.println("timing");
-                    while (globals.passState() == false) {
-                    }
+                    /*while (globals.passState() == false) {
+                    }*/
+                    SystemClock.sleep(2000);
                     System.out.println("released");
                     for (int i = 0; i < globals.getMatches().size(); i++) {
                         MatchObject m = globals.getMatches().get(i);
@@ -157,14 +146,17 @@ import java.util.ArrayList;
                     webview.loadUrl("javascript:(function() { " +
                             "var it = document.getElementsByClassName('full')[0]; " +
                             "for(i=1;i<it.childNodes.length;i+=2){ " +
-                            "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].childNodes[1].innerHTML);" +
+                            "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + it.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
+                            "}" +
+                            "var its = document.getElementsByClassName('full')[1]; " +
+                            "for(i=1;i<its.childNodes.length;i+=2){ " +
+                            "window.JSInterface.addReturned(its.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + its.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
                             "window.JSInterface.passIt();" +
                             "})()");
                     Globals gl = (Globals) getApplicationContext();
                     System.out.println("held");
-                    while (gl.passItemState() == false) {
-                    }
+                    SystemClock.sleep(2000);
                     System.out.println("continue");
                     setContentView(R.layout.mybets);
                     GridLayout won = (GridLayout)findViewById(R.id.won);
@@ -177,7 +169,70 @@ import java.util.ArrayList;
                         wear.setText(gl.getWon_items().get(i).getWear());
                         TextView price = (TextView)newItem.findViewById(R.id.price);
                         price.setText(gl.getWon_items().get(i).getPrice());
+                        ImageView image = (ImageView)newItem.findViewById(R.id.picture);
+                        Ion.with(image).load(gl.getWon_items().get(i).getSrc());
+                        String rarity = gl.getWon_items().get(i).getRarity();
+                        switch(rarity){
+                            case " Industrial":
+                                price.setBackgroundColor(getResources().getColor(R.color.industrial));
+                                break;
+                            case " Restricted":
+                                price.setBackgroundColor(getResources().getColor(R.color.restricted));
+                                break;
+                            case " Classified":
+                                price.setBackgroundColor(getResources().getColor(R.color.classified));
+                                break;
+                            case " Mil-Spec":
+                                price.setBackgroundColor(getResources().getColor(R.color.milspec));
+                                break;
+                            case " Consumer":
+                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
+                                break;
+                            case " Covert":
+                                price.setBackgroundColor(getResources().getColor(R.color.covert));
+                                break;
+                            default:
+                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
+                                break;
+                        }
                         won.addView(newItem);
+                    }
+                    GridLayout returned = (GridLayout)findViewById(R.id.returned);
+                    for(int i=0;i<gl.getReturned_items().size();i++){
+                        View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
+                        TextView name = (TextView)newItem.findViewById(R.id.name);
+                        name.setText(gl.getReturned_items().get(i).getName());
+                        TextView wear = (TextView)newItem.findViewById(R.id.wear);
+                        wear.setText(gl.getReturned_items().get(i).getWear());
+                        TextView price = (TextView)newItem.findViewById(R.id.price);
+                        price.setText(gl.getReturned_items().get(i).getPrice());
+                        ImageView image = (ImageView)newItem.findViewById(R.id.picture);
+                        Ion.with(image).load(gl.getReturned_items().get(i).getSrc());
+                        String rarity = gl.getReturned_items().get(i).getRarity();
+                        switch(rarity){
+                            case " Industrial":
+                                price.setBackgroundColor(getResources().getColor(R.color.industrial));
+                                break;
+                            case " Restricted":
+                                price.setBackgroundColor(getResources().getColor(R.color.restricted));
+                                break;
+                            case " Classified":
+                                price.setBackgroundColor(getResources().getColor(R.color.classified));
+                                break;
+                            case " Mil-Spec":
+                                price.setBackgroundColor(getResources().getColor(R.color.milspec));
+                                break;
+                            case " Consumer":
+                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
+                                break;
+                            case " Covert":
+                                price.setBackgroundColor(getResources().getColor(R.color.covert));
+                                break;
+                            default:
+                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
+                                break;
+                        }
+                        returned.addView(newItem);
                     }
 
 
