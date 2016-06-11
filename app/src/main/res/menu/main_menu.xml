@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Steam Login"
+        android:icon="@drawable/steam_icon"
+        android:id="@+id/login"
+        android:visible="true" />
+    <item android:title="My Bets"
+        android:id="@+id/bets"
+        android:visible="true"
+        android:enabled="true" />
+</menu>

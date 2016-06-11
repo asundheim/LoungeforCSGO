@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageButton
+        android:src="#9045748f"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageButton" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="122dp"
+        android:layout_height="58dp"
+        android:id="@+id/price" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="72dp"
+        android:layout_height="41dp"
+        android:id="@+id/wear"
+        android:layout_gravity="right" />
+</FrameLayout>
