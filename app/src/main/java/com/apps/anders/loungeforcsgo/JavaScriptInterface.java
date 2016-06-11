@@ -47,4 +47,16 @@ public class JavaScriptInterface {
         EditText t = (EditText)activity.findViewById(R.id.authcode);
         return t.getText().toString();
     }
+    @JavascriptInterface
+    public void addWon(String s){
+        String[] item_info = s.split("---");
+        System.out.println(s);
+        Globals g = (Globals)activity.getApplicationContext();
+        g.addWon(new ItemObject(item_info[0],item_info[1],item_info[2]));
+    }
+    @JavascriptInterface
+    public void passIt(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.changeItems();
+    }
 }

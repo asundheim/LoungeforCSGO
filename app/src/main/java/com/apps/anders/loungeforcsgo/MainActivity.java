@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -153,8 +154,31 @@ import java.util.ArrayList;
                     });*/
 
                 }else if(url.equals("https://csgolounge.com/mybets")){
+                    webview.loadUrl("javascript:(function() { " +
+                            "var it = document.getElementsByClassName('full')[0]; " +
+                            "for(i=1;i<it.childNodes.length;i+=2){ " +
+                            "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].childNodes[1].innerHTML);" +
+                            "}" +
+                            "window.JSInterface.passIt();" +
+                            "})()");
+                    Globals gl = (Globals) getApplicationContext();
+                    System.out.println("held");
+                    while (gl.passItemState() == false) {
+                    }
+                    System.out.println("continue");
                     setContentView(R.layout.mybets);
-                    GridView won = (GridView)findViewById(R.id.won);
+                    GridLayout won = (GridLayout)findViewById(R.id.won);
+
+                    for(int i=0;i<gl.getWon_items().size();i++){
+                        View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
+                        TextView name = (TextView)newItem.findViewById(R.id.name);
+                        name.setText(gl.getWon_items().get(i).getName());
+                        TextView wear = (TextView)newItem.findViewById(R.id.wear);
+                        wear.setText(gl.getWon_items().get(i).getWear());
+                        TextView price = (TextView)newItem.findViewById(R.id.price);
+                        price.setText(gl.getWon_items().get(i).getPrice());
+                        won.addView(newItem);
+                    }
 
 
                 }

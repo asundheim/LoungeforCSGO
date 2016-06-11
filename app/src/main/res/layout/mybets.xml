@@ -3,24 +3,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mybets">
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/won">
-
-    </GridLayout>
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/returned">
-
-    </GridLayout>
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/requested">
+        android:layout_height="match_parent"
+        android:id="@+id/won"
+        android:rowCount="5"
+        android:columnCount="1">
 
     </GridLayout>
 </LinearLayout>
