@@ -7,7 +7,7 @@
         android:layout_width="90dp"
         android:layout_height="75dp"
         android:text="Team 1"
-        android:id="@+id/button1"
+        android:id="@+id/betted_team_button_1"
         android:layout_gravity="right|top"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="vs."
-        android:id="@+id/textView3"
+        android:id="@+id/betted_vs"
         android:layout_gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
@@ -30,7 +30,7 @@
         android:layout_width="90dp"
         android:layout_height="75dp"
         android:text="Team 2"
-        android:id="@+id/button2"
+        android:id="@+id/betted_team_button_2"
         android:layout_gravity="left|top"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
@@ -44,28 +44,30 @@
         android:layout_width="166dp"
         android:layout_height="wrap_content"
         android:text="Team 1"
-        android:id="@+id/textView1"
+        android:id="@+id/betted_team_1"
         android:layout_gravity="left|bottom"
-        android:layout_below="@id/button2"
+        android:layout_below="@id/betted_team_button_2"
         android:textAlignment="center"
         android:layout_marginLeft="10dp"
-        android:layout_alignRight="@+id/button1"
-        android:layout_alignEnd="@+id/button1"
-        android:layout_marginTop="5dp" />
+        android:layout_alignRight="@+id/betted_team_button_1"
+        android:layout_alignEnd="@+id/betted_team_button_1"
+        android:layout_marginTop="5dp"
+        android:gravity="center" />
 
     <TextView
         android:layout_width="166dp"
         android:layout_height="wrap_content"
         android:text="Team 2"
-        android:id="@+id/textView2"
+        android:id="@+id/betted_team_2"
         android:layout_gravity="right|bottom"
         android:textAlignment="center"
-        android:layout_alignTop="@+id/textView1"
-        android:layout_alignRight="@+id/button2"
-        android:layout_alignEnd="@+id/button2"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignLeft="@+id/button2"
-        android:layout_alignStart="@+id/button2" />
+        android:layout_alignTop="@+id/betted_team_1"
+        android:layout_alignRight="@+id/betted_team_button_2"
+        android:layout_alignEnd="@+id/betted_team_button_2"
+        android:layout_alignBottom="@+id/betted_team_1"
+        android:layout_alignLeft="@+id/betted_team_button_2"
+        android:layout_alignStart="@+id/betted_team_button_2"
+        android:gravity="center" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -80,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2 hours from now"
-        android:id="@+id/textViewTime"
+        android:id="@+id/betted_time"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
@@ -89,26 +91,26 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="XX%"
-        android:id="@+id/textView1_odds"
+        android:id="@+id/betted_odds_1"
         android:layout_alignTop="@+id/textViewBestOf"
-        android:layout_toRightOf="@+id/button1"
-        android:layout_toEndOf="@+id/button1" />
+        android:layout_toRightOf="@+id/betted_team_button_1"
+        android:layout_toEndOf="@+id/betted_team_button_1" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="XX%"
-        android:id="@+id/textView2_odds"
+        android:id="@+id/betted_odds_2"
         android:layout_alignTop="@+id/textViewBestOf"
-        android:layout_toLeftOf="@+id/button2"
-        android:layout_toStartOf="@+id/button2" />
+        android:layout_toLeftOf="@+id/betted_team_button_2"
+        android:layout_toStartOf="@+id/betted_team_button_2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewExtra"
-        android:layout_alignTop="@+id/button2"
+        android:layout_alignTop="@+id/betted_team_button_2"
         android:layout_centerHorizontal="true"
         android:textColor="#ff0709" />
 

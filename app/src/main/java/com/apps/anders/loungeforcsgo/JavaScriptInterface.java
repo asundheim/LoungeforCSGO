@@ -62,6 +62,13 @@ public class JavaScriptInterface {
         g.addReturned(new ItemObject(item_info[0],item_info[1],item_info[2],item_info[3],item_info[4]));
     }
     @JavascriptInterface
+    public void addBettedMatch(String s){
+        String match_info[] = s.split("---");
+        Globals g = (Globals)activity.getApplicationContext();
+        System.out.println(s);
+        g.addBetted_Match(new MatchObject(match_info[0],match_info[1],match_info[2],match_info[3],match_info[4]));
+    }
+    @JavascriptInterface
     public void passIt(){
         Globals g = (Globals)activity.getApplicationContext();
         g.changeItems();

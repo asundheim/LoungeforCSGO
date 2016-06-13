@@ -19,6 +19,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 //import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Ion;
@@ -64,13 +65,13 @@ import java.io.File;
                     LinearLayout container = (LinearLayout) findViewById(R.id.linear_container);
                     for (int i = 0; i < 21; i++) {
                         View newView = LayoutInflater.from(MainActivity.this).inflate(R.layout.new_match, null);
-                        ImageButton button1 = (ImageButton) newView.findViewById(R.id.button1);
-                        ImageButton button2 = (ImageButton) newView.findViewById(R.id.button2);
-                        TextView team_1 = (TextView) newView.findViewById(R.id.textView1);
-                        TextView team_2 = (TextView) newView.findViewById(R.id.textView2);
+                        ImageButton button1 = (ImageButton) newView.findViewById(R.id.betted_team_button_1);
+                        ImageButton button2 = (ImageButton) newView.findViewById(R.id.betted_team_button_2);
+                        TextView team_1 = (TextView) newView.findViewById(R.id.betted_team_1);
+                        TextView team_2 = (TextView) newView.findViewById(R.id.betted_team_2);
 
-                        TextView team_1_odds = (TextView) newView.findViewById(R.id.textView1_odds);
-                        TextView team_2_odds = (TextView) newView.findViewById(R.id.textView2_odds);
+                        TextView team_1_odds = (TextView) newView.findViewById(R.id.betted_odds_1);
+                        TextView team_2_odds = (TextView) newView.findViewById(R.id.betted_odds_2);
                         if (globals.getMatches().get(i).getTeam_1_won().equals("won")) {
                             team_1_odds.setTextColor(Color.GREEN);
                             team_2_odds.setTextColor(Color.RED);
@@ -79,7 +80,7 @@ import java.io.File;
                             team_1_odds.setTextColor(Color.RED);
 
                         }
-                        TextView time = (TextView) newView.findViewById(R.id.textViewTime);
+                        TextView time = (TextView) newView.findViewById(R.id.betted_time);
                         TextView format = (TextView) newView.findViewById(R.id.textViewBestOf);
                         TextView extra_info = (TextView) newView.findViewById(R.id.textViewExtra);
                         team_1.setText(globals.getMatches().get(i).getTeam_1());
@@ -144,21 +145,25 @@ import java.io.File;
 
                 }else if(url.equals("https://csgolounge.com/mybets")){
                     webview.loadUrl("javascript:(function() { " +
-                            "var it = document.getElementsByClassName('full')[0]; " +
+                            "var it = document.getElementsByClassName('full')[document.getElementsByClassName('match').length]; " +
                             "for(i=1;i<it.childNodes.length;i+=2){ " +
                             "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + it.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
-                            "var its = document.getElementsByClassName('full')[1]; " +
+                            "var its = document.getElementsByClassName('full')[1+(document.getElementsByClassName('match').length)]; " +
                             "for(i=1;i<its.childNodes.length;i+=2){ " +
                             "window.JSInterface.addReturned(its.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + its.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
-                            "window.JSInterface.passIt();" +
+                            "var fm = document.getElementsByClassName('match'); " +
+                            "for(i=0;i<fm.length;i++){ " +
+                            "window.JSInterface.addBettedMatch(fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[3].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[3].innerText + \"---\" + document.getElementsByClassName('whenm')[i].innerText); " +
+                            "}" +
                             "})()");
                     Globals gl = (Globals) getApplicationContext();
                     System.out.println("held");
-                    SystemClock.sleep(2000);
+                    SystemClock.sleep(3000);
                     System.out.println("continue");
                     setContentView(R.layout.mybets);
+                    //setContentView(webview);
                     GridLayout won = (GridLayout)findViewById(R.id.won);
 
                     for(int i=0;i<gl.getWon_items().size();i++){
@@ -172,29 +177,7 @@ import java.io.File;
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getWon_items().get(i).getSrc());
                         String rarity = gl.getWon_items().get(i).getRarity();
-                        switch(rarity){
-                            case " Industrial":
-                                price.setBackgroundColor(getResources().getColor(R.color.industrial));
-                                break;
-                            case " Restricted":
-                                price.setBackgroundColor(getResources().getColor(R.color.restricted));
-                                break;
-                            case " Classified":
-                                price.setBackgroundColor(getResources().getColor(R.color.classified));
-                                break;
-                            case " Mil-Spec":
-                                price.setBackgroundColor(getResources().getColor(R.color.milspec));
-                                break;
-                            case " Consumer":
-                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
-                                break;
-                            case " Covert":
-                                price.setBackgroundColor(getResources().getColor(R.color.covert));
-                                break;
-                            default:
-                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
-                                break;
-                        }
+                        price.setBackgroundColor(itemColor(rarity));
                         won.addView(newItem);
                     }
                     GridLayout returned = (GridLayout)findViewById(R.id.returned);
@@ -209,33 +192,24 @@ import java.io.File;
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getReturned_items().get(i).getSrc());
                         String rarity = gl.getReturned_items().get(i).getRarity();
-                        switch(rarity){
-                            case " Industrial":
-                                price.setBackgroundColor(getResources().getColor(R.color.industrial));
-                                break;
-                            case " Restricted":
-                                price.setBackgroundColor(getResources().getColor(R.color.restricted));
-                                break;
-                            case " Classified":
-                                price.setBackgroundColor(getResources().getColor(R.color.classified));
-                                break;
-                            case " Mil-Spec":
-                                price.setBackgroundColor(getResources().getColor(R.color.milspec));
-                                break;
-                            case " Consumer":
-                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
-                                break;
-                            case " Covert":
-                                price.setBackgroundColor(getResources().getColor(R.color.covert));
-                                break;
-                            default:
-                                price.setBackgroundColor(getResources().getColor(R.color.consumer));
-                                break;
-                        }
+                        price.setBackgroundColor(itemColor(rarity));
                         returned.addView(newItem);
                     }
-
-
+                    LinearLayout mybets = (LinearLayout)findViewById(R.id.betted_container);
+                    for(int i=0;i<gl.getBetted_Matches().size();i++){
+                        View bettedMatchView = LayoutInflater.from(MainActivity.this).inflate(R.layout.betted_match, null);
+                        TextView team1 = (TextView) bettedMatchView.findViewById(R.id.betted_team_1);
+                        team1.setText(gl.getBetted_Matches().get(i).getTeam_1());
+                        TextView team2 = (TextView) bettedMatchView.findViewById(R.id.betted_team_2);
+                        team2.setText(gl.getBetted_Matches().get(i).getTeam_2());
+                        TextView team1_odds = (TextView) bettedMatchView.findViewById(R.id.betted_odds_1);
+                        team1_odds.setText(gl.getBetted_Matches().get(i).getOdds_team_1());
+                        TextView team2_odds = (TextView) bettedMatchView.findViewById(R.id.betted_odds_2);
+                        team2_odds.setText(gl.getBetted_Matches().get(i).getOdds_team_2());
+                        TextView time = (TextView)bettedMatchView.findViewById(R.id.betted_time);
+                        time.setText(gl.getBetted_Matches().get(i).getTime());
+                        mybets.addView(bettedMatchView);
+                    }
                 }
             }
         });
@@ -248,6 +222,24 @@ import java.io.File;
 
         //setContentView(webview);
     }
+        int itemColor(String color){
+            switch(color){
+                case " Industrial":
+                    return getResources().getColor(R.color.industrial);
+                case " Restricted":
+                    return getResources().getColor(R.color.restricted);
+                case " Classified":
+                    return getResources().getColor(R.color.classified);
+                case " Mil-Spec":
+                    return getResources().getColor(R.color.milspec);
+                case " Consumer":
+                    return getResources().getColor(R.color.consumer);
+                case " Covert":
+                    return getResources().getColor(R.color.covert);
+                default:
+                    return getResources().getColor(R.color.consumer);
+            }
+        }
         public void downloadFile(String uRl, String name) {
             File direct = new File(Environment.getExternalStorageDirectory()
                     + "/LoungeForCSGO");
@@ -296,6 +288,12 @@ import java.io.File;
         if (id==R.id.bets){
             webview.loadUrl("javascript:(function() { " +
                     "document.getElementById('menu').childNodes[7].click(); " +
+                    "})()");
+            return true;
+        }
+        if (id==R.id.logout){
+            webview.loadUrl("javascript:(function() { " +
+                    "document.getElementById('logout').click(); " +
                     "})()");
         }
 

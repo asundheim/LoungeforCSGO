@@ -8,4 +8,8 @@
         android:id="@+id/bets"
         android:visible="true"
         android:enabled="true" />
+    <item android:title="Logout"
+        android:id="@+id/logout"
+        android:visible="true"
+        android:enabled="true" />
 </menu>
