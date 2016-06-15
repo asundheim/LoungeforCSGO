@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -23,8 +24,14 @@ public class MatchObject {
     String time;
     String team_1_won;
     String team_2_won;
+    String value;
+    ArrayList<ItemObject> bet_items = new ArrayList<ItemObject>();
     public String getExtra_info() {
         return extra_info;
+    }
+
+    public ArrayList<ItemObject> getBet_items() {
+        return bet_items;
     }
 
     String format;
@@ -63,12 +70,13 @@ public class MatchObject {
         //team_1_image = fromURL("https://" + team_1_url.split("\"")[1].substring(2, team_1_url.split("\"")[1].length() - 11));
         //team_2_image = fromURL("https://"+team_2_url.split("\"")[1].substring(2,team_2_url.split("\"")[1].length()-11));
     }
-    public MatchObject(String team_1, String team_2, String odds_team_1, String odds_team_2, String time){
+    public MatchObject(String team_1, String team_2, String odds_team_1, String odds_team_2, String time,String value){
         this.team_1 = team_1.replace("&amp;","&");
         this.team_2 = team_2.replace("&amp;","&");
         this.odds_team_1 = odds_team_1;
         this.odds_team_2 = odds_team_2;
         this.time = time;
+        this.value = value;
     }
     public static Drawable fromURL(String url){
         try {
@@ -102,5 +110,11 @@ public class MatchObject {
 
     public Drawable getTeam_2_image() {
         return team_2_image;
+    }
+    public void addBet_items(ItemObject i){
+        bet_items.add(i);
+    }
+    public String getValue(){
+        return value;
     }
 }

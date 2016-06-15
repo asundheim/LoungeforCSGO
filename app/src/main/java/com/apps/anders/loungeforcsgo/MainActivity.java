@@ -12,15 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 //import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Ion;
 
@@ -28,9 +33,11 @@ import java.io.File;
 
     public class MainActivity extends AppCompatActivity{
     WebView webview;
+    Toast t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        t= Toast.makeText(this,"",Toast.LENGTH_SHORT);
 
         webview = new WebView(this);
         //webview.setWebViewClient(new WebViewClient());
@@ -147,26 +154,31 @@ import java.io.File;
                     webview.loadUrl("javascript:(function() { " +
                             "var it = document.getElementsByClassName('full')[document.getElementsByClassName('match').length]; " +
                             "for(i=1;i<it.childNodes.length;i+=2){ " +
-                            "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + it.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
+                                "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + it.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
                             "var its = document.getElementsByClassName('full')[1+(document.getElementsByClassName('match').length)]; " +
                             "for(i=1;i<its.childNodes.length;i+=2){ " +
-                            "window.JSInterface.addReturned(its.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + its.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
+                                "window.JSInterface.addReturned(its.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + its.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
                             "var fm = document.getElementsByClassName('match'); " +
                             "for(i=0;i<fm.length;i++){ " +
-                            "window.JSInterface.addBettedMatch(fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[3].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[3].innerText + \"---\" + document.getElementsByClassName('whenm')[i].innerText); " +
+                                "window.JSInterface.addBettedMatch(fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[3].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[3].innerText + \"---\" + document.getElementsByClassName('whenm')[i].innerText + \"---\" + fm[0].getElementsByClassName('full')[0].getElementsByClassName('potwin Value')[0].innerText); " +
+                                "var ky = document.getElementsByClassName('match')[i].getElementsByClassName('winsorloses')[1].getElementsByClassName('oitm');" +
+                                "for(j=0;j<ky.length;j++){" +
+                                    "window.JSInterface.addItems(ky[j].childNodes[1].childNodes[1].innerText + \"---\" + ky[j].childNodes[1].childNodes[1].innerText + \"---\" + ky[j].childNodes[3].getElementsByClassName('value')[0].innerText + \"---\" + ky[j].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + ky[j].childNodes[1].childNodes[4].innerText,i);" +
+                                "}" +
                             "}" +
                             "})()");
-                    Globals gl = (Globals) getApplicationContext();
+                    final Globals gl = (Globals) getApplicationContext();
                     System.out.println("held");
-                    SystemClock.sleep(3000);
+                    SystemClock.sleep(4000);
                     System.out.println("continue");
+
                     setContentView(R.layout.mybets);
                     //setContentView(webview);
-                    GridLayout won = (GridLayout)findViewById(R.id.won);
+                    final GridLayout won = (GridLayout)findViewById(R.id.won);
 
-                    for(int i=0;i<gl.getWon_items().size();i++){
+                    for(int i = 0; i<gl.getWon_items().size(); i++){
                         View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
                         TextView name = (TextView)newItem.findViewById(R.id.name);
                         name.setText(gl.getWon_items().get(i).getName());
@@ -176,6 +188,15 @@ import java.io.File;
                         price.setText(gl.getWon_items().get(i).getPrice());
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getWon_items().get(i).getSrc());
+                        final int finalI = i;
+                        image.setOnTouchListener(new View.OnTouchListener(){
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                               t.setText(gl.getWon_items().get(finalI).getName());
+                               t.show();
+                               return true;
+                            }
+                        });
                         String rarity = gl.getWon_items().get(i).getRarity();
                         price.setBackgroundColor(itemColor(rarity));
                         won.addView(newItem);
@@ -191,6 +212,15 @@ import java.io.File;
                         price.setText(gl.getReturned_items().get(i).getPrice());
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getReturned_items().get(i).getSrc());
+                        final int finalK = i;
+                        image.setOnTouchListener(new View.OnTouchListener(){
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                t.setText(gl.getReturned_items().get(finalK).getName());
+                                t.show();
+                                return true;
+                            }
+                        });
                         String rarity = gl.getReturned_items().get(i).getRarity();
                         price.setBackgroundColor(itemColor(rarity));
                         returned.addView(newItem);
@@ -208,6 +238,48 @@ import java.io.File;
                         team2_odds.setText(gl.getBetted_Matches().get(i).getOdds_team_2());
                         TextView time = (TextView)bettedMatchView.findViewById(R.id.betted_time);
                         time.setText(gl.getBetted_Matches().get(i).getTime());
+                        TextView val = (TextView)bettedMatchView.findViewById(R.id.betted_expected);
+                        val.setText("Expected Return: $" + gl.getBetted_Matches().get(i).getValue().split(" ")[0]);
+                        for(int j=1;j<=gl.getBetted_Matches().get(i).getBet_items().size();j++){
+                            ImageView imv = (ImageView)bettedMatchView.findViewById(getResources().getIdentifier("betted_item_"+j,"id",getApplicationContext().getPackageName())).findViewById(R.id.picture);
+                            Ion.with(imv).load(gl.getBetted_Matches().get(i).getBet_items().get(j-1).getSrc());
+                            final int finalI = i;
+                            final int finalJ = j;
+                            imv.setOnTouchListener(new View.OnTouchListener(){
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+                                    t.setText(gl.getBetted_Matches().get(finalI).getBet_items().get(finalJ -1).getName());
+                                    t.show();
+                                    return true;
+                                }
+                            });
+                            TextView prc = (TextView)bettedMatchView.findViewById(getResources().getIdentifier("betted_item_"+j,"id",getApplicationContext().getPackageName())).findViewById((R.id.price));
+                            prc.setText(gl.getBetted_Matches().get(i).getBet_items().get(j-1).getPrice());
+                            String rarity = gl.getBetted_Matches().get(i).getBet_items().get(j-1).getRarity();
+                            prc.setBackgroundColor(itemColor(rarity));
+                        }
+                        ImageButton b1 = (ImageButton)bettedMatchView.findViewById(R.id.betted_team_button_1);
+                        ImageButton b2 = (ImageButton)bettedMatchView.findViewById(R.id.betted_team_button_2);
+                        File im_1 = new File(Environment.getExternalStorageDirectory()
+                                + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg");
+
+                        if (!im_1.exists()) {
+                            downloadFile("http://www.csgolounge.com/img/teams/" + gl.getBetted_Matches().get(i).getTeam_1() + ".jpg", gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", ""));
+                            b1.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
+                        } else {
+                            b1.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
+                        }
+
+                        File im_2 = new File(Environment.getExternalStorageDirectory()
+                                + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg");
+
+                        if (!im_2.exists()) {
+                            System.out.println("fail");
+                            downloadFile("http://www.csgolounge.com/img/teams/" + gl.getBetted_Matches().get(i).getTeam_2() + ".jpg", gl.getBetted_Matches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", ""));
+                            b2.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
+                        } else {
+                            b2.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
+                        }
                         mybets.addView(bettedMatchView);
                     }
                 }
