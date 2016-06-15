@@ -282,6 +282,46 @@ import java.io.File;
                         }
                         mybets.addView(bettedMatchView);
                     }
+                }else{
+                    SystemClock.sleep(4000);
+                    webview.loadUrl("javascript:(function() { " +
+                            "console.log(\"b\");" +
+                            "var iw = document.getElementById('backpack').getElementsByClassName('oitm');" +
+                            "console.log(iw);" +
+                            "window.JSInterface.clearReturns();" +
+                            "for(i=0;i<iw.length;i++){" +
+                                "window.JSInterface.addReturns(iw[i].childNodes[1].childNodes[1].innerText + \"---\" + iw[i].childNodes[1].childNodes[1].innerText + \"---\" + iw[i].childNodes[3].getElementsByClassName('value')[0].innerText + \"---\" + iw[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + iw[i].childNodes[1].childNodes[4].innerText)" +
+                            "}" +
+                            "})()");
+                    final Globals gl = (Globals)getApplicationContext();
+                    System.out.println("held");
+                    SystemClock.sleep(4000);
+                    System.out.println("continue");
+                    setContentView(R.layout.beton_match);
+                    GridLayout returns = (GridLayout)findViewById(R.id.returns);
+                    for(int i=0;i<gl.getReturns().size();i++){
+                        View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
+                        TextView name = (TextView)newItem.findViewById(R.id.name);
+                        name.setText(gl.getReturns().get(i).getName());
+                        TextView wear = (TextView)newItem.findViewById(R.id.wear);
+                        wear.setText(gl.getReturns().get(i).getWear());
+                        TextView price = (TextView)newItem.findViewById(R.id.price);
+                        price.setText(gl.getReturns().get(i).getPrice());
+                        ImageView image = (ImageView)newItem.findViewById(R.id.picture);
+                        Ion.with(image).load(gl.getReturns().get(i).getSrc());
+                        final int finalL = i;
+                        image.setOnTouchListener(new View.OnTouchListener(){
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                t.setText(gl.getReturns().get(finalL).getName());
+                                t.show();
+                                return true;
+                            }
+                        });
+                        String rarity = gl.getReturns().get(i).getRarity();
+                        price.setBackgroundColor(itemColor(rarity));
+                        returns.addView(newItem);
+                    }
                 }
             }
         });
@@ -368,7 +408,11 @@ import java.io.File;
                     "document.getElementById('logout').click(); " +
                     "})()");
         }
-
+        if (id==R.id.test){
+            webview.loadUrl("javascript:(function() { " +
+                    "document.getElementsByClassName('matchmain')[9].getElementsByClassName('match')[0].getElementsByClassName('matchleft')[0].childNodes[1].click(); " +
+                    "})()");
+        }
         return super.onOptionsItemSelected(item);
     }
 

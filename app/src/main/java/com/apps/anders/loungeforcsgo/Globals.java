@@ -51,6 +51,12 @@ public class Globals extends Application {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    public static ArrayList<ItemObject> returns = new ArrayList<ItemObject>();
+    public static ArrayList<ItemObject> getReturns(){ return returns;}
+    public void addReturns(ItemObject i){ returns.add(i); }
+    public void clearReturns(){ returns.clear();}
+
+    ////////////////////////////////////////////////////////////////////////////
     public boolean pass = false;
     public boolean passItems = false;
     public void change(){
