@@ -7,7 +7,7 @@
         android:layout_width="90dp"
         android:layout_height="75dp"
         android:text="Team 1"
-        android:id="@+id/betted_team_button_1"
+        android:id="@+id/team_1_image"
         android:layout_gravity="right|top"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -21,7 +21,7 @@
         android:layout_width="90dp"
         android:layout_height="75dp"
         android:text="Team 2"
-        android:id="@+id/betted_team_button_2"
+        android:id="@+id/team_2_image"
         android:layout_gravity="left|top"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
@@ -39,11 +39,11 @@
         android:layout_gravity="right|bottom"
         android:textAlignment="center"
         android:layout_alignTop="@+id/betted_team_1"
-        android:layout_alignRight="@+id/betted_team_button_2"
-        android:layout_alignEnd="@+id/betted_team_button_2"
+        android:layout_alignRight="@+id/team_2_image"
+        android:layout_alignEnd="@+id/team_2_image"
         android:layout_alignBottom="@+id/betted_team_1"
-        android:layout_alignLeft="@+id/betted_team_button_2"
-        android:layout_alignStart="@+id/betted_team_button_2"
+        android:layout_alignLeft="@+id/team_2_image"
+        android:layout_alignStart="@+id/team_2_image"
         android:gravity="center" />
 
     <TextView
@@ -53,8 +53,8 @@
         android:text="XX%"
         android:id="@+id/betted_odds_1"
         android:layout_above="@+id/betted_team_1"
-        android:layout_toRightOf="@+id/betted_team_button_1"
-        android:layout_toEndOf="@+id/betted_team_button_1"
+        android:layout_toRightOf="@+id/team_1_image"
+        android:layout_toEndOf="@+id/team_1_image"
         android:layout_marginBottom="14dp" />
 
     <TextView
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:text="2 hours from now"
         android:id="@+id/betted_time"
-        android:layout_alignTop="@+id/betted_team_button_2"
+        android:layout_alignTop="@+id/team_2_image"
         android:layout_toRightOf="@+id/betted_odds_1"
         android:layout_toEndOf="@+id/betted_odds_1" />
 
@@ -82,8 +82,8 @@
         android:text="XX%"
         android:id="@+id/betted_odds_2"
         android:layout_alignTop="@+id/betted_vs"
-        android:layout_toLeftOf="@+id/betted_team_button_2"
-        android:layout_toStartOf="@+id/betted_team_button_2" />
+        android:layout_toLeftOf="@+id/team_2_image"
+        android:layout_toStartOf="@+id/team_2_image" />
 
     <TextView
         android:layout_width="166dp"
@@ -92,11 +92,11 @@
         android:id="@+id/betted_team_1"
         android:layout_gravity="left|bottom"
         android:textAlignment="center"
-        android:layout_below="@+id/betted_team_button_1"
-        android:layout_alignLeft="@+id/betted_team_button_1"
-        android:layout_alignStart="@+id/betted_team_button_1"
-        android:layout_alignRight="@+id/betted_team_button_1"
-        android:layout_alignEnd="@+id/betted_team_button_1"
+        android:layout_below="@+id/team_1_image"
+        android:layout_alignLeft="@+id/team_1_image"
+        android:layout_alignStart="@+id/team_1_image"
+        android:layout_alignRight="@+id/team_1_image"
+        android:layout_alignEnd="@+id/team_1_image"
         android:gravity="center" />
 
     <Space

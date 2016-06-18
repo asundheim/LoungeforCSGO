@@ -23,7 +23,7 @@ public class JavaScriptInterface {
     public void printAddress(String address) throws IOException {
         //Toast.makeText(activity,address, Toast.LENGTH_SHORT).show();
         String[] info = address.split("---");
-        //System.out.println(address);
+        System.out.println(address);
         //System.out.println("test: "+info[8]);
         Globals g = (Globals) activity.getApplicationContext();
         g.addMatch(new MatchObject(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]));
@@ -104,5 +104,23 @@ public class JavaScriptInterface {
         System.out.println(s);
         Globals g = (Globals)activity.getApplicationContext();
         g.addReturns(new ItemObject(r[0],r[1],r[2],r[3],r[4]));
+    }
+
+    @JavascriptInterface
+    public void clearReturned(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearReturned();
+    }
+
+    @JavascriptInterface
+    public void clearWon(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearWon();
+    }
+
+    @JavascriptInterface
+    public void clearBettedMatches(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearBetted_Matches();
     }
 }

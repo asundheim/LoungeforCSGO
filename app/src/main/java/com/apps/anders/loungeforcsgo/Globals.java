@@ -28,6 +28,7 @@ public class Globals extends Application {
     public void addBetted_Match(MatchObject m){
         betted_matches.add(m);
     }
+    public void clearBetted_Matches(){betted_matches.clear(); }
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +39,7 @@ public class Globals extends Application {
     public void addWon(ItemObject i){
         won_items.add(i);
     }
+    public void clearWon(){ won_items.clear(); }
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +50,7 @@ public class Globals extends Application {
     public void addReturned(ItemObject i){
         returned_items.add(i);
     }
+    public void clearReturned(){ returned_items.clear(); }
 
     ////////////////////////////////////////////////////////////////////////////
 

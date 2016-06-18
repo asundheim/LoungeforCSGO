@@ -25,6 +25,8 @@ public class MatchObject {
     String team_1_won;
     String team_2_won;
     String value;
+    String team_1_url;
+    String team_2_url;
     ArrayList<ItemObject> bet_items = new ArrayList<ItemObject>();
     public String getExtra_info() {
         return extra_info;
@@ -32,6 +34,14 @@ public class MatchObject {
 
     public ArrayList<ItemObject> getBet_items() {
         return bet_items;
+    }
+
+    public String getTeam_1_url() {
+        return team_1_url;
+    }
+
+    public String getTeam_2_url() {
+        return team_2_url;
     }
 
     String format;
@@ -67,8 +77,8 @@ public class MatchObject {
         this.team_2_won = team_2_won.equals("TAG")?"":"won";
         //int imageResource = getResources().getIdentifier(uri, null, getPackageName());
         //System.out.println(team_1_url.split("\"")[1].substring(2,team_1_url.split("\"")[1].length()-11));
-        //team_1_image = fromURL("https://" + team_1_url.split("\"")[1].substring(2, team_1_url.split("\"")[1].length() - 11));
-        //team_2_image = fromURL("https://"+team_2_url.split("\"")[1].substring(2,team_2_url.split("\"")[1].length()-11));
+        this.team_1_url = "https://" + team_1_url.split("\"")[1].substring(2, team_1_url.split("\"")[1].length() - 11);
+        this.team_2_url = "https://"+team_2_url.split("\"")[1].substring(2,team_2_url.split("\"")[1].length()-11);
     }
     public MatchObject(String team_1, String team_2, String odds_team_1, String odds_team_2, String time,String value){
         this.team_1 = team_1.replace("&amp;","&");

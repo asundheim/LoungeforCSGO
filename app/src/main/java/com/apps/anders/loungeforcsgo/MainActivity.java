@@ -3,7 +3,6 @@
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,20 +15,37 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-//import com.koushikdutta.ion.Ion;
+
 import com.koushikdutta.ion.Ion;
 
 import java.io.File;
+/* TODO
+     - My bets
+        - Link matches to match pages
+        - Get rid of waiting x seconds for load and instead intelligently load data from JS
+        - Add select mode to get returns
+     - Front page
+        - Link matches to match pages
+        - Get rid of waiting x seconds for load and instead intelligently load data from JS
+     - Match pages
+        - Add steam backpack
+        - Get rid of waiting x seconds for load and instead intelligently load data from JS
+        - Fix centering of returns
+        - Add buttons for flipping between returns and backpack
+        - Parse float values and stickers for backpack
+        - Modify toasts to show stickers and float values
+        - Select items for betting
+        - Add button to submit bets
+        - Parse match info for layout
+        - Modify match layout to match current spec
+ */
+
+//import com.koushikdutta.ion.Ion;
 
     public class MainActivity extends AppCompatActivity{
     WebView webview;
@@ -45,6 +61,7 @@ import java.io.File;
         JavaScriptInterface jsInterface = new JavaScriptInterface(this);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.addJavascriptInterface(jsInterface, "JSInterface");
+        //document.getElementsByClassName('matchleft')[i].getElementsByClassName('format')[0].textContent
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -52,8 +69,16 @@ import java.io.File;
                 if(url.equals("https://csgolounge.com/")) {
                     webview.loadUrl("javascript:(function() { " +
                             "var content = document.getElementsByClassName('match').length; " +
-                            "for(i = 0;i<document.getElementsByClassName('match').length;i++){ " +
-                            "window.JSInterface.printAddress(document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('format')[0].textContent + \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('match')[i].getElementsByClassName('matchleft')[0].getElementsByClassName('team')[1].innerHTML + \"TAG\"); " +
+                            "for(i = 0;i<21;i++){ " +
+                                "try{" +
+                                    "f = document.getElementsByClassName('matchleft')[i].getElementsByClassName('format')[0].textContent;" +
+                                    "console.log(f);" +
+                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG\"); " +
+                                "}catch(err){" +
+                                    "f=\"--\";" +
+                                    "console.log(f);" +
+                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG\"); " +
+                                "}" +
                             "}" +
                             "window.JSInterface.moveon(); " +
                             "})()");
@@ -62,7 +87,7 @@ import java.io.File;
                     System.out.println("timing");
                     /*while (globals.passState() == false) {
                     }*/
-                    SystemClock.sleep(2000);
+                    SystemClock.sleep(4000);
                     System.out.println("released");
                     for (int i = 0; i < globals.getMatches().size(); i++) {
                         MatchObject m = globals.getMatches().get(i);
@@ -72,11 +97,12 @@ import java.io.File;
                     LinearLayout container = (LinearLayout) findViewById(R.id.linear_container);
                     for (int i = 0; i < 21; i++) {
                         View newView = LayoutInflater.from(MainActivity.this).inflate(R.layout.new_match, null);
-                        ImageButton button1 = (ImageButton) newView.findViewById(R.id.betted_team_button_1);
-                        ImageButton button2 = (ImageButton) newView.findViewById(R.id.betted_team_button_2);
+                        ImageView button1 = (ImageView) newView.findViewById(R.id.team_1_image);
+                        ImageView button2 = (ImageView) newView.findViewById(R.id.team_2_image);
                         TextView team_1 = (TextView) newView.findViewById(R.id.betted_team_1);
                         TextView team_2 = (TextView) newView.findViewById(R.id.betted_team_2);
-
+                        Ion.with(button1).load(globals.getMatches().get(i).getTeam_1_url());
+                        Ion.with(button2).load(globals.getMatches().get(i).getTeam_2_url());
                         TextView team_1_odds = (TextView) newView.findViewById(R.id.betted_odds_1);
                         TextView team_2_odds = (TextView) newView.findViewById(R.id.betted_odds_2);
                         if (globals.getMatches().get(i).getTeam_1_won().equals("won")) {
@@ -95,12 +121,14 @@ import java.io.File;
                         team_1_odds.setText(globals.getMatches().get(i).getOdds_team_1());
                         team_2_odds.setText(globals.getMatches().get(i).getOdds_team_2());
                         time.setText(globals.getMatches().get(i).getTime());
+                        System.out.println(globals.getMatches().get(i).getFormat());
                         format.setText(globals.getMatches().get(i).getFormat());
                         extra_info.setText(globals.getMatches().get(i).getExtra_info());
                         //System.out.println(globals.getMatches().get(i).getTeam_1().toLowerCase().replace("\'","").replace("&",""));
                         //int imageResource1 = getResources().getIdentifier(globals.getMatches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", ""), "drawable", getPackageName());
                         //System.out.println(imageResource);
-                        File im_1 = new File(Environment.getExternalStorageDirectory()
+
+                        /*File im_1 = new File(Environment.getExternalStorageDirectory()
                                 + "/LoungeForCSGO/" + globals.getMatches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg");
 
                         if (!im_1.exists()) {
@@ -119,7 +147,7 @@ import java.io.File;
                             button2.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + globals.getMatches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
                         } else {
                             button2.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + globals.getMatches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
-                        }
+                        }*/
 
                         container.addView(newView);
                     }
@@ -152,17 +180,20 @@ import java.io.File;
 
                 }else if(url.equals("https://csgolounge.com/mybets")){
                     webview.loadUrl("javascript:(function() { " +
+                            "window.JSInterface.clearWon(); " +
                             "var it = document.getElementsByClassName('full')[document.getElementsByClassName('match').length]; " +
                             "for(i=1;i<it.childNodes.length;i+=2){ " +
                                 "window.JSInterface.addWon(it.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + it.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + it.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
+                            "window.JSInterface.clearReturned();" +
                             "var its = document.getElementsByClassName('full')[1+(document.getElementsByClassName('match').length)]; " +
                             "for(i=1;i<its.childNodes.length;i+=2){ " +
                                 "window.JSInterface.addReturned(its.childNodes[i].childNodes[1].childNodes[1].innerHTML + \"---\" + \"NA\" + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('value')[0].innerHTML + \"---\" + its.childNodes[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + its.childNodes[i].childNodes[1].childNodes[4].innerHTML);" +
                             "}" +
                             "var fm = document.getElementsByClassName('match'); " +
+                            "window.JSInterface.clearBettedMatches();" +
                             "for(i=0;i<fm.length;i++){ " +
-                                "window.JSInterface.addBettedMatch(fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[3].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[3].innerText + \"---\" + document.getElementsByClassName('whenm')[i].innerText + \"---\" + fm[0].getElementsByClassName('full')[0].getElementsByClassName('potwin Value')[0].innerText); " +
+                                "window.JSInterface.addBettedMatch(fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[1].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[1].childNodes[3].innerText + \"---\" + fm[i].childNodes[1].childNodes[1].childNodes[5].childNodes[3].innerText + \"---\" + document.getElementsByClassName('whenm')[i].innerText + \"---\" + fm[i].getElementsByClassName('full')[0].getElementsByClassName('potwin Value')[0].innerText); " +
                                 "var ky = document.getElementsByClassName('match')[i].getElementsByClassName('winsorloses')[1].getElementsByClassName('oitm');" +
                                 "for(j=0;j<ky.length;j++){" +
                                     "window.JSInterface.addItems(ky[j].childNodes[1].childNodes[1].innerText + \"---\" + ky[j].childNodes[1].childNodes[1].innerText + \"---\" + ky[j].childNodes[3].getElementsByClassName('value')[0].innerText + \"---\" + ky[j].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + ky[j].childNodes[1].childNodes[4].innerText,i);" +
@@ -258,16 +289,18 @@ import java.io.File;
                             String rarity = gl.getBetted_Matches().get(i).getBet_items().get(j-1).getRarity();
                             prc.setBackgroundColor(itemColor(rarity));
                         }
-                        ImageButton b1 = (ImageButton)bettedMatchView.findViewById(R.id.betted_team_button_1);
-                        ImageButton b2 = (ImageButton)bettedMatchView.findViewById(R.id.betted_team_button_2);
-                        File im_1 = new File(Environment.getExternalStorageDirectory()
+                        ImageView b1 = (ImageView)bettedMatchView.findViewById(R.id.team_1_image);
+                        ImageView b2 = (ImageView)bettedMatchView.findViewById(R.id.team_2_image);
+                        Ion.with(b1).load("https://csgolounge.com/img/teams/"+gl.getBetted_Matches().get(i).getTeam_1()+".jpg");
+                        Ion.with(b2).load("https://csgolounge.com/img/teams/"+gl.getBetted_Matches().get(i).getTeam_2()+".jpg");
+                        /*File im_1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
                                 + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg");
 
                         if (!im_1.exists()) {
                             downloadFile("http://www.csgolounge.com/img/teams/" + gl.getBetted_Matches().get(i).getTeam_1() + ".jpg", gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", ""));
-                            b1.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
+                            b1.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
                         } else {
-                            b1.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
+                            b1.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_1().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
                         }
 
                         File im_2 = new File(Environment.getExternalStorageDirectory()
@@ -279,7 +312,7 @@ import java.io.File;
                             b2.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
                         } else {
                             b2.setImageDrawable(Drawable.createFromPath(Environment.getExternalStorageDirectory() + "/LoungeForCSGO/" + gl.getBetted_Matches().get(i).getTeam_2().toLowerCase().replace("\'", "").replace("&", "") + ".jpg"));
-                        }
+                        }*/
                         mybets.addView(bettedMatchView);
                     }
                 }else{
@@ -352,8 +385,11 @@ import java.io.File;
                     return getResources().getColor(R.color.consumer);
             }
         }
+        public void press(View view){
+            System.out.println("push");
+        }
         public void downloadFile(String uRl, String name) {
-            File direct = new File(Environment.getExternalStorageDirectory()
+            File direct = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
                     + "/LoungeForCSGO");
 
             if (!direct.exists()) {
@@ -371,7 +407,7 @@ import java.io.File;
                             | DownloadManager.Request.NETWORK_MOBILE)
                     .setAllowedOverRoaming(false).setTitle("Running")
                     .setDescription("Updating Team Images")
-                    .setDestinationInExternalPublicDir("/LoungeForCSGO", name+".jpg");
+                    .setDestinationInExternalFilesDir(getApplicationContext(),"/LoungeForCSGO", name+".jpg");
 
             mgr.enqueue(request);
 
@@ -416,4 +452,7 @@ import java.io.File;
         return super.onOptionsItemSelected(item);
     }
 
-}
+        public void pressedMatch(View view) {
+
+        }
+    }

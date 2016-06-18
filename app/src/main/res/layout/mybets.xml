@@ -21,12 +21,12 @@
         android:background="#cfcfcfce" />
 
     <GridLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/won"
-        android:columnCount="3"
         android:useDefaultMargins="true"
-        android:alignmentMode="alignBounds">
+        android:layout_gravity="center_horizontal"
+        android:columnCount="3">
 
     </GridLayout>
 
@@ -42,11 +42,12 @@
 
 
         <GridLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/returned"
             android:columnCount="3"
-            android:useDefaultMargins="true">
+            android:useDefaultMargins="true"
+            android:layout_gravity="center_horizontal">
     </GridLayout>
 
         <TextView
