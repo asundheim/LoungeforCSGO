@@ -11,12 +11,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Anders on 6/2/2016.
  */
-public class MatchObject {
+public class MatchObject{
     String team_1;
     String team_2;
     String odds_team_1;
@@ -27,9 +28,15 @@ public class MatchObject {
     String value;
     String team_1_url;
     String team_2_url;
+    String match_url;
+    GoBetween gogo;
     ArrayList<ItemObject> bet_items = new ArrayList<ItemObject>();
     public String getExtra_info() {
         return extra_info;
+    }
+
+    public String getMatch_url() {
+        return match_url;
     }
 
     public ArrayList<ItemObject> getBet_items() {
@@ -65,7 +72,7 @@ public class MatchObject {
         return team_2_won;
     }
 
-    public MatchObject(String team_1,String team_2,String odds_team_1,String odds_team_2,String team_1_url,String team_2_url,String time, String format, String team_1_won, String team_2_won) throws IOException {
+    public MatchObject(String team_1,String team_2,String odds_team_1,String odds_team_2,String team_1_url,String team_2_url,String time, String format, String team_1_won, String team_2_won, String match_url) throws IOException {
         this.team_1 = team_1.replace("&amp;","&");
         this.team_2 = team_2.replace("&amp;","&");
         this.odds_team_1 = odds_team_1;
@@ -79,6 +86,7 @@ public class MatchObject {
         //System.out.println(team_1_url.split("\"")[1].substring(2,team_1_url.split("\"")[1].length()-11));
         this.team_1_url = "https://" + team_1_url.split("\"")[1].substring(2, team_1_url.split("\"")[1].length() - 11);
         this.team_2_url = "https://"+team_2_url.split("\"")[1].substring(2,team_2_url.split("\"")[1].length()-11);
+        this.match_url = match_url;
     }
     public MatchObject(String team_1, String team_2, String odds_team_1, String odds_team_2, String time,String value){
         this.team_1 = team_1.replace("&amp;","&");
@@ -87,6 +95,13 @@ public class MatchObject {
         this.odds_team_2 = odds_team_2;
         this.time = time;
         this.value = value;
+    }
+
+    public MatchObject(){
+        gogo = new GoBetween();
+        synchronized (gogo){
+            gogo.notifyAll();
+        }
     }
     public static Drawable fromURL(String url){
         try {

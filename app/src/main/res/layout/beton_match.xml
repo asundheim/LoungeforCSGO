@@ -319,15 +319,16 @@
         android:layout_below="@+id/space2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        >
+        android:foregroundGravity="center">
         <ScrollView
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content">
         <GridLayout
             android:id="@+id/returns"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:columnCount="3"
+            android:layout_gravity="center_horizontal"
             android:useDefaultMargins="true"
             android:alignmentMode="alignBounds"
             android:orientation="horizontal"></GridLayout>

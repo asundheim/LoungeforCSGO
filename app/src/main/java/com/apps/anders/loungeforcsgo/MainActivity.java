@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,18 +26,20 @@ import android.widget.Toast;
 import com.koushikdutta.ion.Ion;
 
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 /* TODO
+     - Login
+        - Fix loading mainpage before webview catches up
      - My bets
         - Link matches to match pages
         - Get rid of waiting x seconds for load and instead intelligently load data from JS
         - Add select mode to get returns
      - Front page
-        - Link matches to match pages
         - Get rid of waiting x seconds for load and instead intelligently load data from JS
      - Match pages
         - Add steam backpack
         - Get rid of waiting x seconds for load and instead intelligently load data from JS
-        - Fix centering of returns
         - Add buttons for flipping between returns and backpack
         - Parse float values and stickers for backpack
         - Modify toasts to show stickers and float values
@@ -47,15 +51,19 @@ import java.io.File;
 
 //import com.koushikdutta.ion.Ion;
 
-    public class MainActivity extends AppCompatActivity{
+    public class MainActivity extends AppCompatActivity {
     WebView webview;
     Toast t;
+    GoBetween go;
+    boolean loadmatches = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.loading);
         t= Toast.makeText(this,"",Toast.LENGTH_SHORT);
 
         webview = new WebView(this);
+        webview.loadUrl("http://csgolounge.com/");
         //webview.setWebViewClient(new WebViewClient());
         webview.getSettings().setJavaScriptEnabled(true);
         JavaScriptInterface jsInterface = new JavaScriptInterface(this);
@@ -67,17 +75,16 @@ import java.io.File;
             public void onPageFinished(WebView view, String url) {
                 System.out.println(url);
                 if(url.equals("https://csgolounge.com/")) {
+                    setContentView(R.layout.loading);
                     webview.loadUrl("javascript:(function() { " +
                             "var content = document.getElementsByClassName('match').length; " +
                             "for(i = 0;i<21;i++){ " +
                                 "try{" +
                                     "f = document.getElementsByClassName('matchleft')[i].getElementsByClassName('format')[0].textContent;" +
-                                    "console.log(f);" +
-                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG\"); " +
+                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG---\" + i); " +
                                 "}catch(err){" +
                                     "f=\"--\";" +
-                                    "console.log(f);" +
-                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG\"); " +
+                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG---\" + i); " +
                                 "}" +
                             "}" +
                             "window.JSInterface.moveon(); " +
@@ -85,9 +92,10 @@ import java.io.File;
                     Globals globals = (Globals) getApplicationContext();
                     //globals.printMatch();
                     System.out.println("timing");
-                    /*while (globals.passState() == false) {
+                    /*while (loadmatches == false) {
                     }*/
-                    SystemClock.sleep(4000);
+
+                    //SystemClock.sleep(4000);
                     System.out.println("released");
                     for (int i = 0; i < globals.getMatches().size(); i++) {
                         MatchObject m = globals.getMatches().get(i);
@@ -99,12 +107,24 @@ import java.io.File;
                         View newView = LayoutInflater.from(MainActivity.this).inflate(R.layout.new_match, null);
                         ImageView button1 = (ImageView) newView.findViewById(R.id.team_1_image);
                         ImageView button2 = (ImageView) newView.findViewById(R.id.team_2_image);
+                        Button ma = (Button)newView.findViewById(R.id.matchButton);
+
                         TextView team_1 = (TextView) newView.findViewById(R.id.betted_team_1);
                         TextView team_2 = (TextView) newView.findViewById(R.id.betted_team_2);
                         Ion.with(button1).load(globals.getMatches().get(i).getTeam_1_url());
                         Ion.with(button2).load(globals.getMatches().get(i).getTeam_2_url());
                         TextView team_1_odds = (TextView) newView.findViewById(R.id.betted_odds_1);
                         TextView team_2_odds = (TextView) newView.findViewById(R.id.betted_odds_2);
+                        final TextView matchlink = (TextView)newView.findViewById(R.id.matchlink);
+                        matchlink.setText(globals.getMatches().get(i).getMatch_url());
+                        ma.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                webview.loadUrl("javascript:(function() { " +
+                                        "document.getElementsByClassName('matchleft')["+ matchlink.getText().toString()+"].childNodes[1].click(); " +
+                                        "})()");
+                            }
+                        });
                         if (globals.getMatches().get(i).getTeam_1_won().equals("won")) {
                             team_1_odds.setTextColor(Color.GREEN);
                             team_2_odds.setTextColor(Color.RED);
@@ -151,6 +171,7 @@ import java.io.File;
 
                         container.addView(newView);
                     }
+
                 }else if(url.equals("https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fcsgolounge.com%2Flogin&openid.realm=https%3A%2F%2Fcsgolounge.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select")){
                     setContentView(webview);
                     /*Button clickButton = (Button) findViewById(R.id.submit);
@@ -203,6 +224,7 @@ import java.io.File;
                     final Globals gl = (Globals) getApplicationContext();
                     System.out.println("held");
                     SystemClock.sleep(4000);
+
                     System.out.println("continue");
 
                     setContentView(R.layout.mybets);
@@ -362,7 +384,7 @@ import java.io.File;
 
 
 
-        webview.loadUrl("http://csgolounge.com/");
+
 
 
         //setContentView(webview);
@@ -425,7 +447,13 @@ import java.io.File;
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if(id == R.id.home){
+            setContentView(R.layout.loading);
+            webview.loadUrl("javascript:(function() { " +
+                    "document.body.childNodes[1].childNodes[1].click(); " +
+                    "})()");
+            return true;
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.login) {
             webview.loadUrl("javascript:(function() { " +
@@ -434,6 +462,7 @@ import java.io.File;
             return true;
         }
         if (id==R.id.bets){
+            setContentView(R.layout.loading);
             webview.loadUrl("javascript:(function() { " +
                     "document.getElementById('menu').childNodes[7].click(); " +
                     "})()");
@@ -453,6 +482,11 @@ import java.io.File;
     }
 
         public void pressedMatch(View view) {
-
+            TextView t = (TextView)view.findViewById(R.id.matchlink);
+            webview.loadUrl("javascript:(function() { " +
+                    "document.getElementsByClassName('matchleft')["+ t.getText().toString()+"].childNodes[1].click(); " +
+                    "})()");
         }
+
+
     }

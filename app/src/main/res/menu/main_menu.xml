@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home"
+        android:id="@+id/home"
+        android:visible="true"
+        android:enabled="true" />
     <item android:title="Steam Login"
         android:icon="@drawable/steam_icon"
         android:id="@+id/login"

@@ -26,14 +26,15 @@ public class JavaScriptInterface {
         System.out.println(address);
         //System.out.println("test: "+info[8]);
         Globals g = (Globals) activity.getApplicationContext();
-        g.addMatch(new MatchObject(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]));
+        g.addMatch(new MatchObject(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9],info[10]));
         //System.out.println(info[4]);
     }
+
 
     @JavascriptInterface
     public void moveon() {
         Globals g = (Globals) activity.getApplicationContext();
-        g.change();
+        g.addMatch(new MatchObject());
     }
 
     @JavascriptInterface
