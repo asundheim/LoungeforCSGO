@@ -54,7 +54,7 @@ public class ItemObject {
         this.price = price;
         this.src = src;
         this.rarity = rarity;
-        this.floatValue = floatValue;
+        this.floatValue = floatValue.substring(24);
     }
     public ItemObject(String name,String wear,String price,String src,String rarity, String floatValue, String[] stickers){
         this.name = name;

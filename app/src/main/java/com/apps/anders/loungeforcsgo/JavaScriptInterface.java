@@ -19,6 +19,8 @@ public class JavaScriptInterface {
         this.activity = activiy;
     }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @JavascriptInterface
     public void printAddress(String address) throws IOException {
         //Toast.makeText(activity,address, Toast.LENGTH_SHORT).show();
@@ -30,30 +32,7 @@ public class JavaScriptInterface {
         //System.out.println(info[4]);
     }
 
-
-    @JavascriptInterface
-    public void moveon() {
-        Globals g = (Globals) activity.getApplicationContext();
-        g.addMatch(new MatchObject());
-    }
-
-    @JavascriptInterface
-    public String getUsername() {
-        EditText t = (EditText) activity.findViewById(R.id.username);
-        return t.getText().toString();
-    }
-
-    @JavascriptInterface
-    public String getPassword() {
-        EditText t = (EditText) activity.findViewById(R.id.password);
-        return t.getText().toString();
-    }
-
-    @JavascriptInterface
-    public String getAuth() {
-        EditText t = (EditText) activity.findViewById(R.id.authcode);
-        return t.getText().toString();
-    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @JavascriptInterface
     public void addWon(String s) {
@@ -64,12 +43,28 @@ public class JavaScriptInterface {
     }
 
     @JavascriptInterface
+    public void clearWon(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearWon();
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @JavascriptInterface
     public void addReturned(String s) {
         String[] item_info = s.split("---");
         System.out.println(s);
         Globals g = (Globals) activity.getApplicationContext();
         g.addReturned(new ItemObject(item_info[0], item_info[1], item_info[2], item_info[3], item_info[4]));
     }
+
+    @JavascriptInterface
+    public void clearReturned(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearReturned();
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @JavascriptInterface
     public void addBettedMatch(String s) {
@@ -79,11 +74,6 @@ public class JavaScriptInterface {
         g.addBetted_Match(new MatchObject(match_info[0], match_info[1], match_info[2], match_info[3], match_info[4],match_info[5]));
     }
 
-    @JavascriptInterface
-    public void passIt() {
-        Globals g = (Globals) activity.getApplicationContext();
-        g.changeItems();
-    }
 
     @JavascriptInterface
     public void addItems(String s, int i) {
@@ -92,6 +82,14 @@ public class JavaScriptInterface {
         Globals g = (Globals)activity.getApplicationContext();
         g.getBetted_Matches().get(i).addBet_items(new ItemObject(item_info[0],item_info[1],item_info[2],item_info[3],item_info[4]));
     }
+
+    @JavascriptInterface
+    public void clearBettedMatches(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearBetted_Matches();
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @JavascriptInterface
     public void clearReturns(){
@@ -104,24 +102,54 @@ public class JavaScriptInterface {
         String r[] = s.split("---");
         System.out.println(s);
         Globals g = (Globals)activity.getApplicationContext();
+        //g.doShowBackpack();
         g.addReturns(new ItemObject(r[0],r[1],r[2],r[3],r[4]));
     }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @JavascriptInterface
-    public void clearReturned(){
+    public void clearBackpack(){
         Globals g = (Globals)activity.getApplicationContext();
-        g.clearReturned();
+        g.clearBackpack();
     }
 
     @JavascriptInterface
-    public void clearWon(){
+    public void addBackpack(String s){
+        String r[] = s.split("---");
+        System.out.println(s);
         Globals g = (Globals)activity.getApplicationContext();
-        g.clearWon();
+        g.doShowBackpack();
+        g.addBackpack(new ItemObject(r[0],r[1],r[2],r[3],r[4],r[5]));
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @JavascriptInterface
+    public void clearBetpageItems(){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.clearBetpage_items();
     }
 
     @JavascriptInterface
-    public void clearBettedMatches(){
+    public void addBetpageItem(String s){
+        String[] e = s.split("---");
         Globals g = (Globals)activity.getApplicationContext();
-        g.clearBetted_Matches();
+        g.addBetpage_item(new ItemObject(e[0],e[1],e[2],e[3],e[4]));
+        g.dontShowBackpack();
     }
+
+    @JavascriptInterface
+    public void updateA(String s){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.setValA(s);
+    }
+
+    @JavascriptInterface
+    public void updateB(String s){
+        Globals g = (Globals)activity.getApplicationContext();
+        g.setValB(s);
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

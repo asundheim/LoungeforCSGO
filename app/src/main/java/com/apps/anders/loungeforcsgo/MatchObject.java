@@ -29,48 +29,9 @@ public class MatchObject{
     String team_1_url;
     String team_2_url;
     String match_url;
-    GoBetween gogo;
-    ArrayList<ItemObject> bet_items = new ArrayList<ItemObject>();
-    public String getExtra_info() {
-        return extra_info;
-    }
-
-    public String getMatch_url() {
-        return match_url;
-    }
-
-    public ArrayList<ItemObject> getBet_items() {
-        return bet_items;
-    }
-
-    public String getTeam_1_url() {
-        return team_1_url;
-    }
-
-    public String getTeam_2_url() {
-        return team_2_url;
-    }
-
     String format;
     String extra_info;
-    public String getTime() {
-        return time;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    Drawable team_1_image;
-    Drawable team_2_image;
-
-    public String getTeam_1_won() {
-        return team_1_won;
-    }
-
-    public String getTeam_2_won() {
-        return team_2_won;
-    }
+    ArrayList<ItemObject> bet_items = new ArrayList<ItemObject>();
 
     public MatchObject(String team_1,String team_2,String odds_team_1,String odds_team_2,String team_1_url,String team_2_url,String time, String format, String team_1_won, String team_2_won, String match_url) throws IOException {
         this.team_1 = team_1.replace("&amp;","&");
@@ -82,8 +43,6 @@ public class MatchObject{
         extra_info = time.indexOf("ago")==-1?time.substring(time.indexOf("now") + 3):time.substring(time.indexOf("ago")+3);
         this.team_1_won = team_1_won.equals("TAG")?"":"won";
         this.team_2_won = team_2_won.equals("TAG")?"":"won";
-        //int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-        //System.out.println(team_1_url.split("\"")[1].substring(2,team_1_url.split("\"")[1].length()-11));
         this.team_1_url = "https://" + team_1_url.split("\"")[1].substring(2, team_1_url.split("\"")[1].length() - 11);
         this.team_2_url = "https://"+team_2_url.split("\"")[1].substring(2,team_2_url.split("\"")[1].length()-11);
         this.match_url = match_url;
@@ -96,50 +55,95 @@ public class MatchObject{
         this.time = time;
         this.value = value;
     }
+//////////////////////////////////////////////////////////////////////
 
-    public MatchObject(){
-        gogo = new GoBetween();
-        synchronized (gogo){
-            gogo.notifyAll();
-        }
+    public String getExtra_info() {
+        return extra_info;
     }
-    public static Drawable fromURL(String url){
-        try {
-            return new DownloadFiles().execute(url).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getMatch_url() {
+        return match_url;
     }
+
+//////////////////////////////////////////////////////////////////////
+
+    public ArrayList<ItemObject> getBet_items() {
+        return bet_items;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTeam_1_url() {
+        return team_1_url;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTeam_2_url() {
+        return team_2_url;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTime() {
+        return time;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getFormat() {
+        return format;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTeam_1_won() {
+        return team_1_won;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTeam_2_won() {
+        return team_2_won;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
     public String getOdds_team_2() {
         return odds_team_2;
     }
+
+//////////////////////////////////////////////////////////////////////
 
     public String getOdds_team_1() {
         return odds_team_1;
     }
 
+//////////////////////////////////////////////////////////////////////
+
     public String getTeam_2() {
         return team_2;
     }
+
+//////////////////////////////////////////////////////////////////////
 
     public String getTeam_1() {
         return team_1;
     }
 
-    public Drawable getTeam_1_image() {
-        return team_1_image;
-    }
+//////////////////////////////////////////////////////////////////////
 
-    public Drawable getTeam_2_image() {
-        return team_2_image;
-    }
     public void addBet_items(ItemObject i){
         bet_items.add(i);
     }
+
+//////////////////////////////////////////////////////////////////////
+
     public String getValue(){
         return value;
     }
+
+//////////////////////////////////////////////////////////////////////
 }
