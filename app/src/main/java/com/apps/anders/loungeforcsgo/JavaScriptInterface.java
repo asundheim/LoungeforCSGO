@@ -39,7 +39,7 @@ public class JavaScriptInterface {
         String[] item_info = s.split("---");
         System.out.println(s);
         Globals g = (Globals) activity.getApplicationContext();
-        g.addWon(new ItemObject(item_info[0], item_info[1], item_info[2], item_info[3], item_info[4]));
+        g.addWon(new ItemObject(item_info[0], item_info[1], item_info[2], item_info[3], item_info[4],item_info[5]));
     }
 
     @JavascriptInterface
@@ -55,7 +55,7 @@ public class JavaScriptInterface {
         String[] item_info = s.split("---");
         System.out.println(s);
         Globals g = (Globals) activity.getApplicationContext();
-        g.addReturned(new ItemObject(item_info[0], item_info[1], item_info[2], item_info[3], item_info[4]));
+        g.addReturned(new ItemObject(item_info[0], item_info[1], item_info[2], item_info[3], item_info[4],item_info[5]));
     }
 
     @JavascriptInterface
@@ -71,7 +71,7 @@ public class JavaScriptInterface {
         String match_info[] = s.split("---");
         Globals g = (Globals) activity.getApplicationContext();
         System.out.println(s);
-        g.addBetted_Match(new MatchObject(match_info[0], match_info[1], match_info[2], match_info[3], match_info[4],match_info[5]));
+        g.addBetted_Match(new MatchObject(match_info[0], match_info[1], match_info[2], match_info[3], match_info[4],match_info[5],match_info[6],match_info[7]));
     }
 
 
@@ -80,7 +80,7 @@ public class JavaScriptInterface {
         String item_info[] = s.split("---");
         System.out.println(s);
         Globals g = (Globals)activity.getApplicationContext();
-        g.getBetted_Matches().get(i).addBet_items(new ItemObject(item_info[0],item_info[1],item_info[2],item_info[3],item_info[4]));
+        g.getBetted_Matches().get(i).addBet_items(new ItemObject(item_info[0],item_info[1],item_info[2],item_info[3],item_info[4],item_info[5]));
     }
 
     @JavascriptInterface
@@ -103,7 +103,7 @@ public class JavaScriptInterface {
         System.out.println(s);
         Globals g = (Globals)activity.getApplicationContext();
         //g.doShowBackpack();
-        g.addReturns(new ItemObject(r[0],r[1],r[2],r[3],r[4]));
+        g.addReturns(new ItemObject(r[0],r[1],r[2],r[3],r[4],r[5]));
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,8 +135,8 @@ public class JavaScriptInterface {
     public void addBetpageItem(String s){
         String[] e = s.split("---");
         Globals g = (Globals)activity.getApplicationContext();
-        g.addBetpage_item(new ItemObject(e[0],e[1],e[2],e[3],e[4]));
-        g.dontShowBackpack();
+        g.addBetpage_item(new ItemObject(e[0],e[1],e[2],e[3],e[4],e[5]));
+        //g.dontShowBackpack();
     }
 
     @JavascriptInterface

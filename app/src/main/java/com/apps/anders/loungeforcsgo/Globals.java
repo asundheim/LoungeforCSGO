@@ -83,7 +83,7 @@ public class Globals extends Application {
         betpage_items.add(i);
     }
     public void clearBetpage_items(){betpage_items.clear();}
-    public boolean showBackpack = false;
+    public boolean showBackpack = true;
     public boolean getShowBackpack(){ return showBackpack; }
     public void dontShowBackpack(){ showBackpack = false; }
     public void doShowBackpack(){ showBackpack = true; }
@@ -97,6 +97,8 @@ public class Globals extends Application {
     public View item2;
     public View item3;
     public View item4;
+    public View item5;
+    public View item6;
     public View getItem1() {
         return item1;
     }
@@ -108,6 +110,12 @@ public class Globals extends Application {
     }
     public View getItem4() {
         return item4;
+    }
+    public View getItem5() {
+        return item5;
+    }
+    public View getItem6() {
+        return item6;
     }
     public void setItem1(View item1) {
         this.item1 = item1;
@@ -121,9 +129,22 @@ public class Globals extends Application {
     public void setItem4(View item4) {
         this.item4 = item4;
     }
+    public void setItem5(View item5) {
+        this.item5 = item5;
+    }
+    public void setItem6(View item6) {
+        this.item6 = item6;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////
 
+    public String invState = "returns";
+    public void setStateReturns(){invState="returns";}
+    public void setStateBackpack(){invState="backpack";}
+    public String getInvState(){return invState;}
+
+    ////////////////////////////////////////////////////////////////////////////
     public boolean pass = false;
     public boolean passItems = false;
     public void change(){
@@ -135,5 +156,10 @@ public class Globals extends Application {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    public int homescreens = 0;
+    public int getHomescreens(){return homescreens; }
+    public void addToHomescreens(){homescreens++;}
+
+    /////////////////////////////////////////////////////////////////////////////
 
 }

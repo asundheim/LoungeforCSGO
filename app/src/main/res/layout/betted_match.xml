@@ -97,9 +97,8 @@
         android:id="@+id/betted_time"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/betted_item_2"
-        android:layout_alignStart="@+id/betted_item_2"
-        android:layout_marginTop="10dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -116,10 +115,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="XX%"
         android:id="@+id/betted_odds_2"
-        android:layout_alignBaseline="@+id/betted_odds_1"
-        android:layout_alignBottom="@+id/betted_odds_1"
-        android:layout_toRightOf="@+id/betted_item_3"
-        android:layout_toEndOf="@+id/betted_item_3" />
+        android:layout_alignBaseline="@+id/betted_team_2_button"
+        android:layout_alignBottom="@+id/betted_team_2_button"
+        android:layout_toLeftOf="@+id/imageView4"
+        android:layout_toStartOf="@+id/imageView4" />
 
     <TextView
         android:layout_width="166dp"
@@ -148,10 +147,8 @@
         android:layout_height="43dp"
         android:id="@+id/betted_item_1"
         android:layout_below="@+id/space"
-        android:layout_alignRight="@+id/betted_odds_1"
-        android:layout_alignEnd="@+id/betted_odds_1"
-        android:layout_toStartOf="@+id/betted_item_2"
-        android:layout_marginRight="30dp">
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -207,8 +204,8 @@
         android:layout_height="43dp"
         android:id="@+id/betted_item_2"
         android:layout_below="@+id/space"
-        android:layout_toLeftOf="@+id/betted_vs"
-        android:layout_toStartOf="@+id/betted_vs">
+        android:layout_toRightOf="@+id/betted_item_1"
+        android:layout_marginLeft="10dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -265,8 +262,8 @@
         android:layout_height="43dp"
         android:id="@+id/betted_item_3"
         android:layout_below="@+id/space"
-        android:layout_toRightOf="@+id/betted_vs"
-        android:layout_toEndOf="@+id/betted_vs">
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/betted_item_2">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -321,11 +318,9 @@
         android:layout_width="49.5dp"
         android:layout_height="43dp"
         android:id="@+id/betted_item_4"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginLeft="10dp"
         android:layout_below="@+id/space"
-        android:layout_toRightOf="@+id/betted_item_3"
-        android:layout_toEndOf="@+id/betted_item_3">
+        android:layout_toRightOf="@+id/betted_item_3">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -376,6 +371,64 @@
             android:layout_alignParentStart="true" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="49.5dp"
+        android:layout_height="43dp"
+        android:id="@+id/betted_item_5"
+        android:layout_toRightOf="@+id/betted_item_4"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/space">
+
+        <ImageView
+            android:src="#00ffffff"
+            android:layout_width="49.5dp"
+            android:layout_height="33dp"
+            android:id="@+id/picture"
+            android:layout_weight="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:clickable="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wear"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="49.5dp"
+            android:layout_height="10dp"
+            android:id="@+id/price"
+            android:background="#00ffffff"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/picture"
+            android:textSize="8dp" />
+
+        <Button
+            android:layout_width="49.5dp"
+            android:layout_height="43dp"
+            android:id="@+id/selectButton"
+            android:background="@android:color/transparent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
@@ -409,9 +462,91 @@
         android:layout_height="wrap_content"
         android:text="Change  Team"
         android:id="@+id/changeteam"
-        android:layout_above="@+id/betted_team_1"
-        android:layout_centerHorizontal="true"
         android:textSize="6dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/team_1_image"
         android:layout_below="@+id/betted_vs" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;---"
+        android:id="@+id/teamLeft"
+        android:textSize="6dp"
+        android:layout_above="@+id/betted_team_1"
+        android:layout_toLeftOf="@+id/betted_vs"
+        android:layout_toStartOf="@+id/betted_vs"
+        android:layout_below="@+id/betted_vs"
+        android:visibility="gone" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="--->"
+        android:id="@+id/teamRight"
+        android:textSize="6dp"
+        android:layout_toRightOf="@+id/betted_vs"
+        android:layout_toEndOf="@+id/teamLeft"
+        android:layout_above="@+id/betted_team_2"
+        android:layout_below="@+id/betted_vs"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="49.5dp"
+        android:layout_height="43dp"
+        android:id="@+id/betted_item_6"
+        android:layout_below="@+id/space"
+        android:layout_toRightOf="@+id/betted_item_5"
+        android:layout_marginLeft="10dp">
+
+        <ImageView
+            android:src="#00ffffff"
+            android:layout_width="49.5dp"
+            android:layout_height="33dp"
+            android:id="@+id/picture"
+            android:layout_weight="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:clickable="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wear"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="49.5dp"
+            android:layout_height="10dp"
+            android:id="@+id/price"
+            android:background="#00ffffff"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/picture"
+            android:textSize="8dp" />
+
+        <Button
+            android:layout_width="49.5dp"
+            android:layout_height="43dp"
+            android:id="@+id/selectButton"
+            android:background="@android:color/transparent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

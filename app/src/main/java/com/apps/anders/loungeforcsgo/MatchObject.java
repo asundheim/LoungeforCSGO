@@ -31,6 +31,8 @@ public class MatchObject{
     String match_url;
     String format;
     String extra_info;
+    String team_1_picked;
+    String team_2_picked;
     ArrayList<ItemObject> bet_items = new ArrayList<ItemObject>();
 
     public MatchObject(String team_1,String team_2,String odds_team_1,String odds_team_2,String team_1_url,String team_2_url,String time, String format, String team_1_won, String team_2_won, String match_url) throws IOException {
@@ -47,13 +49,15 @@ public class MatchObject{
         this.team_2_url = "https://"+team_2_url.split("\"")[1].substring(2,team_2_url.split("\"")[1].length()-11);
         this.match_url = match_url;
     }
-    public MatchObject(String team_1, String team_2, String odds_team_1, String odds_team_2, String time,String value){
+    public MatchObject(String team_1, String team_2, String odds_team_1, String odds_team_2, String time,String value,String team_1_picked, String team_2_picked){
         this.team_1 = team_1.replace("&amp;","&");
         this.team_2 = team_2.replace("&amp;","&");
         this.odds_team_1 = odds_team_1;
         this.odds_team_2 = odds_team_2;
         this.time = time;
         this.value = value;
+        this.team_1_picked = team_1_picked;
+        this.team_2_picked = team_2_picked;
     }
 //////////////////////////////////////////////////////////////////////
 
@@ -143,6 +147,18 @@ public class MatchObject{
 
     public String getValue(){
         return value;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTeam_1_picked() {
+        return team_1_picked;
+    }
+
+//////////////////////////////////////////////////////////////////////
+
+    public String getTeam_2_picked() {
+        return team_2_picked;
     }
 
 //////////////////////////////////////////////////////////////////////

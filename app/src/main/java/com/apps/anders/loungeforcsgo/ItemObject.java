@@ -12,6 +12,9 @@ public class ItemObject {
     String rarity;
     String price;
     String[] stickers;
+    String st;
+
+    public String getST(){ return st; }
 
     public String getFloatValue() {
         return floatValue;
@@ -41,22 +44,24 @@ public class ItemObject {
         return src;
     }
 
-    public ItemObject(String name,String wear,String price,String src,String rarity){
+    public ItemObject(String name,String wear,String price,String src,String rarity, String st){
         this.name = name;
         this.wear = wear;
         this.price = price;
         this.src = src;
         this.rarity = rarity;
+        this.st = st;
     }
-    public ItemObject(String name,String wear,String price,String src,String rarity, String floatValue){
+    public ItemObject(String name,String wear,String price,String src,String rarity, String st, String floatValue){
         this.name = name;
         this.wear = wear;
         this.price = price;
         this.src = src;
         this.rarity = rarity;
         this.floatValue = floatValue.substring(24);
+        this.st = st;
     }
-    public ItemObject(String name,String wear,String price,String src,String rarity, String floatValue, String[] stickers){
+    public ItemObject(String name,String wear,String price,String src,String rarity, String st, String floatValue, String[] stickers){
         this.name = name;
         this.wear = wear;
         this.price = price;
@@ -64,6 +69,7 @@ public class ItemObject {
         this.rarity = rarity;
         this.floatValue = floatValue;
         this.stickers = stickers;
+        this.st = st;
     }
 
 }

@@ -43,7 +43,7 @@
         android:layout_height="60dp"
         android:id="@+id/team_1_button"
         android:visibility="visible"
-        android:onClick="press"
+        android:onClick="pressedMatch"
         android:enabled="true"
         android:background="@android:color/transparent"
         android:layout_alignParentLeft="true"
@@ -157,7 +157,7 @@
         android:layout_marginRight="5dp" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewExtra"
         android:textColor="#ff0709"
@@ -166,14 +166,15 @@
         android:layout_alignStart="@+id/betted_odds_1"
         android:layout_alignRight="@+id/betted_odds_2"
         android:layout_alignEnd="@+id/betted_odds_2"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textSize="10dp" />
 
     <Button
         android:layout_width="75dp"
         android:layout_height="60dp"
         android:id="@+id/team_2_button"
         android:visibility="visible"
-        android:onClick="press"
+        android:onClick="pressedMatch"
         android:enabled="true"
         android:background="@android:color/transparent"
         android:layout_alignStart="@+id/team_2_image"
