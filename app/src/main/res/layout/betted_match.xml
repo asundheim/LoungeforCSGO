@@ -4,6 +4,74 @@
     android:background="#8ee4dfe1">
 
     <ImageView
+        android:layout_width="53.5dp"
+        android:layout_height="47dp"
+        android:id="@+id/imageView22"
+        android:background="@color/behindimage"
+        android:layout_below="@+id/space"
+        android:layout_toRightOf="@+id/betted_item_5"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp" />
+
+    <ImageView
+        android:layout_width="53.5dp"
+        android:layout_height="47dp"
+        android:id="@+id/imageView20"
+        android:background="@color/behindimage"
+        android:layout_toRightOf="@+id/betted_item_4"
+        android:layout_below="@+id/space"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp" />
+
+    <ImageView
+        android:layout_width="53.5dp"
+        android:layout_height="47dp"
+        android:id="@+id/imageView18"
+        android:background="@color/behindimage"
+        android:layout_toRightOf="@+id/betted_item_3"
+        android:layout_below="@+id/space"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp" />
+
+    <ImageView
+        android:layout_width="53.5dp"
+        android:layout_height="47dp"
+        android:id="@+id/imageView16"
+        android:background="@color/behindimage"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_toRightOf="@+id/betted_item_2"
+        android:layout_below="@+id/space"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp" />
+
+    <ImageView
+        android:layout_width="53.5dp"
+        android:layout_height="47dp"
+        android:id="@+id/imageView14"
+        android:background="@color/behindimage"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/space"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/betted_item_1"
+        android:layout_marginTop="2dp" />
+
+    <ImageView
+        android:layout_width="53.5dp"
+        android:layout_height="47dp"
+        android:id="@+id/imageView12"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/space"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/behindimage" />
+
+    <ImageView
         android:layout_width="80dp"
         android:layout_height="65dp"
         android:id="@+id/imageView4"
@@ -148,7 +216,18 @@
         android:id="@+id/betted_item_1"
         android:layout_below="@+id/space"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView13"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -197,6 +276,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@android:color/transparent" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -205,7 +285,18 @@
         android:id="@+id/betted_item_2"
         android:layout_below="@+id/space"
         android:layout_toRightOf="@+id/betted_item_1"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView15"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -263,7 +354,18 @@
         android:id="@+id/betted_item_3"
         android:layout_below="@+id/space"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/betted_item_2">
+        android:layout_toRightOf="@+id/betted_item_2"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView17"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -312,6 +414,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -320,8 +423,19 @@
         android:id="@+id/betted_item_4"
         android:layout_marginLeft="10dp"
         android:layout_below="@+id/space"
-        android:layout_toRightOf="@+id/betted_item_3">
-    <TextView
+        android:layout_toRightOf="@+id/betted_item_3"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView19"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background" />
+
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/name"
@@ -369,6 +483,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -377,7 +492,17 @@
         android:id="@+id/betted_item_5"
         android:layout_toRightOf="@+id/betted_item_4"
         android:layout_marginLeft="10dp"
-        android:layout_below="@+id/space">
+        android:layout_below="@+id/space"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView21"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background" />
 
         <ImageView
             android:src="#00ffffff"
@@ -427,6 +552,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
     <Space
@@ -497,7 +623,17 @@
         android:id="@+id/betted_item_6"
         android:layout_below="@+id/space"
         android:layout_toRightOf="@+id/betted_item_5"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView23"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background" />
 
         <ImageView
             android:src="#00ffffff"
@@ -547,6 +683,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
 </RelativeLayout>

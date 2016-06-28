@@ -3,11 +3,13 @@
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Color;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,9 +36,14 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.koushikdutta.ion.Ion;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 /* TODO
@@ -56,23 +63,32 @@ import java.util.Observer;
     Toast t;
     GoBetween go;
     InterstitialAd mInterstitialAd;
+        private GoogleApiClient mClient;
+        private Uri mUrl;
+        private String mTitle;
+        private String mDescription;
     boolean loadmatches = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mInterstitialAd = new InterstitialAd(this);
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        mUrl = Uri.parse("http://csgolounge.com");
+        mTitle = "CSGOLounge for Android";
+        mDescription = "Use csgolounge on your Android phone";
+        /*mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 requestNewInterstitial();
             }
-        });
-        requestNewInterstitial();
+        });*/
+        /*requestNewInterstitial();*/
         setContentView(R.layout.loading);
         loadAnimation();
         t = Toast.makeText(this,"",Toast.LENGTH_SHORT);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        /*MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");*/
         webview = new WebView(this);
         webview.loadUrl("http://csgolounge.com/");
         //webview.setWebViewClient(new WebViewClient());
@@ -81,6 +97,7 @@ import java.util.Observer;
         webview.getSettings().setJavaScriptEnabled(true);
         webview.addJavascriptInterface(jsInterface, "JSInterface");
         //document.getElementsByClassName('matchleft')[i].getElementsByClassName('format')[0].textContent
+
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -93,15 +110,17 @@ import java.util.Observer;
                             "for(i = 0;i<21;i++){ " +
                                 "try{" +
                                     "f = document.getElementsByClassName('matchleft')[i].getElementsByClassName('format')[0].textContent;" +
-                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG---\" + i); " +
+                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].parentElement.parentElement.getElementsByClassName('matchheader')[0].getElementsByClassName('whenm')[0].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG---\" + i); " +
                                 "}catch(err){" +
                                     "f=\"--\";" +
-                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('whenm')[i].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG---\" + i); " +
+                            //document.getElementsByClassName('matchleft')[0].parentElement.parentElement.getElementsByClassName('matchheader')[0].getElementsByClassName('whenm')[0].textContent
+
+                                    "window.JSInterface.printAddress(document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('B')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[0].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('teamtext')[1].getElementsByTagName('I')[0].innerHTML + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].style.background + \"---\" + document.getElementsByClassName('matchleft')[i].parentElement.parentElement.getElementsByClassName('matchheader')[0].getElementsByClassName('whenm')[0].textContent + \"---\" + f + \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[0].innerHTML + \"TAG\"+ \"---\" + document.getElementsByClassName('matchleft')[i].getElementsByClassName('team')[1].innerHTML + \"TAG---\" + i); " +
                                 "}" +
                             "}" +
                             "window.JSInterface.moveon(); " +
                             "})()");
-                    Globals globals = (Globals) getApplicationContext();
+                    final Globals globals = (Globals) getApplicationContext();
                     //globals.printMatch();
                     System.out.println("timing");
                     /*while (loadmatches == false) {
@@ -113,14 +132,14 @@ import java.util.Observer;
                         MatchObject m = globals.getMatches().get(i);
                         //System.out.println(m.getTeam_1() + "(" + m.getOdds_team_1() + ") vs " + m.getTeam_2() + "(" + m.getOdds_team_2() + ")");
                     }
-                    globals.addToHomescreens();
+                   /* globals.addToHomescreens();
                     if (mInterstitialAd.isLoaded()&&globals.getHomescreens()%2!=0) {
                         mInterstitialAd.show();
-                    }
-                        setContentView(R.layout.container);
-                    AdView mAdView = (AdView) findViewById(R.id.adView);
+                    }*/
+                    setContentView(R.layout.container);
+                    /*AdView mAdView = (AdView) findViewById(R.id.adView);
                     AdRequest adRequest = new AdRequest.Builder().build();
-                    mAdView.loadAd(adRequest);
+                    mAdView.loadAd(adRequest);*/
                     LinearLayout container = (LinearLayout) findViewById(R.id.linear_container);
                     for (int i = 0; i < 21; i++) {
                         View newView = LayoutInflater.from(MainActivity.this).inflate(R.layout.new_match, null);
@@ -220,7 +239,19 @@ import java.util.Observer;
 
                         container.addView(newView);
                     }
-
+                    final SwipeRefreshLayout swipe = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+                    swipe.setOnRefreshListener(
+                            new SwipeRefreshLayout.OnRefreshListener() {
+                                @Override
+                                public void onRefresh() {
+                                    globals.clearMatches();
+                                    webview.reload();
+                                    // This method performs the actual data-refresh operation.
+                                    // The method calls setRefreshing(false) when it's finished
+                                    swipe.setRefreshing(false);
+                                }
+                            }
+                    );
                 }else if(url.equals("https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fcsgolounge.com%2Flogin&openid.realm=https%3A%2F%2Fcsgolounge.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select")){
                     setContentView(webview);
                     /*Button clickButton = (Button) findViewById(R.id.submit);
@@ -286,7 +317,7 @@ import java.util.Observer;
 
                     for(int i = 0; i<gl.getWon_items().size(); i++){
                         View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
-                        TextView name = (TextView)newItem.findViewById(R.id.name);
+                        final TextView name = (TextView)newItem.findViewById(R.id.name);
                         name.setText(gl.getWon_items().get(i).getName());
                         TextView wear = (TextView)newItem.findViewById(R.id.wear);
                         wear.setText(gl.getWon_items().get(i).getWear());
@@ -298,6 +329,15 @@ import java.util.Observer;
                         if(gl.getWon_items().get(i).getST().equals("ST")){
                             st.setBackgroundColor(getResources().getColor(R.color.StatTrak));
                         }
+                        Button b = (Button)newItem.findViewById(R.id.selectButton);
+                        b.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                t.setText(name.getText().toString());
+                                t.show();
+                                return true;
+                            }
+                        });
                         final int finalI = i;
                         image.setOnTouchListener(new View.OnTouchListener(){
                             @Override
@@ -307,6 +347,7 @@ import java.util.Observer;
                                return true;
                             }
                         });
+
                         String rarity = gl.getWon_items().get(i).getRarity();
                         price.setBackgroundColor(itemColor(rarity));
                         won.addView(newItem);
@@ -314,7 +355,7 @@ import java.util.Observer;
                     GridLayout returned = (GridLayout)findViewById(R.id.returned);
                     for(int i=0;i<gl.getReturned_items().size();i++){
                         View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
-                        TextView name = (TextView)newItem.findViewById(R.id.name);
+                        final TextView name = (TextView)newItem.findViewById(R.id.name);
                         name.setText(gl.getReturned_items().get(i).getName());
                         TextView wear = (TextView)newItem.findViewById(R.id.wear);
                         wear.setText(gl.getReturned_items().get(i).getWear());
@@ -326,6 +367,15 @@ import java.util.Observer;
                         if(gl.getReturned_items().get(i).getST().equals("ST")){
                             st.setBackgroundColor(getResources().getColor(R.color.StatTrak));
                         }
+                        Button b = (Button)newItem.findViewById(R.id.selectButton);
+                        b.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                t.setText(name.getText().toString());
+                                t.show();
+                                return true;
+                            }
+                        });
                         final int finalK = i;
                         image.setOnTouchListener(new View.OnTouchListener(){
                             @Override
@@ -496,6 +546,7 @@ import java.util.Observer;
                             ImageView t2 = (ImageView)findViewById(R.id.imageView9);
                             t1.setBackgroundColor(getResources().getColor(R.color.selectedteam));
                             t2.setBackgroundColor(getResources().getColor(R.color.behindimage));
+                            gl.setBetTrue();
                         }
                     });
                     Button selectTeam2 = (Button)findViewById(R.id.team2_button);
@@ -509,17 +560,21 @@ import java.util.Observer;
                             ImageView t2 = (ImageView)findViewById(R.id.imageView9);
                             t2.setBackgroundColor(getResources().getColor(R.color.selectedteam));
                             t1.setBackgroundColor(getResources().getColor(R.color.behindimage));
+                            gl.setBetTrue();
                         }
                     });
                     Button placebet = (Button)findViewById(R.id.placebet);
                     placebet.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setContentView(R.layout.loading);
-                            loadAnimation();
-                            webview.loadUrl("javascript:(function() { " +
-                                    "document.getElementById('placebut').click(); " +
-                                    "})()");
+                            if(gl.getCanBet()) {
+                                setContentView(R.layout.loading);
+                                loadAnimation();
+                                webview.loadUrl("javascript:(function() { " +
+                                        "document.getElementById('placebut').click(); " +
+                                        "})()");
+                                gl.setBetFalse();
+                            }
                         }
                     });
                     TextView team_1 = (TextView)findViewById(R.id.betted_team_1);
@@ -749,29 +804,31 @@ import java.util.Observer;
                             b1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    returns.addView(gl.getItem1());
-                                    ImageView ii1 = (ImageView)findViewById(R.id.betted_item_1).findViewById(R.id.picture);
-                                    TextView tt1 = (TextView)findViewById(R.id.betted_item_1).findViewById(R.id.price);
-                                    ii1.setImageResource(android.R.color.transparent);
-                                    tt1.setText("");
-                                    tt1.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
-                                            "for(x=0;x<g.length;x++){" +
-                                            "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\""+s+"\"){" +
-                                            "g[x].getElementsByClassName('item tobet')[0].click();" +
-                                            "}" +
-                                            "}" +
-                                            "})()");
-                                    TextView valA = (TextView)findViewById(R.id.return_team1);
-                                    TextView valB = (TextView)findViewById(R.id.return_team2);
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
-                                            "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
-                                            "})()");
-                                    SystemClock.sleep(100);
-                                    valA.setText(gl.getValA());
-                                    valB.setText(gl.getValB());
+                                    try {
+                                        returns.addView(gl.getItem1());
+                                        ImageView ii1 = (ImageView) findViewById(R.id.betted_item_1).findViewById(R.id.picture);
+                                        TextView tt1 = (TextView) findViewById(R.id.betted_item_1).findViewById(R.id.price);
+                                        ii1.setImageResource(android.R.color.transparent);
+                                        tt1.setText("");
+                                        tt1.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
+                                                "for(x=0;x<g.length;x++){" +
+                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\"" + s + "\"){" +
+                                                "g[x].getElementsByClassName('item tobet')[0].click();" +
+                                                "}" +
+                                                "}" +
+                                                "})()");
+                                        TextView valA = (TextView) findViewById(R.id.return_team1);
+                                        TextView valB = (TextView) findViewById(R.id.return_team2);
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                                "})()");
+                                        SystemClock.sleep(100);
+                                        valA.setText(gl.getValA());
+                                        valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             returns.removeView(newItem);
@@ -786,29 +843,31 @@ import java.util.Observer;
                             b2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    returns.addView(gl.getItem2());
-                                    ImageView ii2 = (ImageView)findViewById(R.id.betted_item_2).findViewById(R.id.picture);
-                                    TextView tt2 = (TextView)findViewById(R.id.betted_item_2).findViewById(R.id.price);
-                                    ii2.setImageResource(android.R.color.transparent);
-                                    tt2.setText("");
-                                    tt2.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
-                                            "for(x=0;x<g.length;x++){" +
-                                            "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\""+s+"\"){" +
-                                            "g[x].getElementsByClassName('item tobet')[0].click();" +
-                                            "}" +
-                                            "}" +
-                                            "})()");
-                                    TextView valA = (TextView)findViewById(R.id.return_team1);
-                                    TextView valB = (TextView)findViewById(R.id.return_team2);
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
-                                            "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
-                                            "})()");
-                                    SystemClock.sleep(100);
-                                    valA.setText(gl.getValA());
-                                    valB.setText(gl.getValB());
+                                    try {
+                                        returns.addView(gl.getItem2());
+                                        ImageView ii2 = (ImageView) findViewById(R.id.betted_item_2).findViewById(R.id.picture);
+                                        TextView tt2 = (TextView) findViewById(R.id.betted_item_2).findViewById(R.id.price);
+                                        ii2.setImageResource(android.R.color.transparent);
+                                        tt2.setText("");
+                                        tt2.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
+                                                "for(x=0;x<g.length;x++){" +
+                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\"" + s + "\"){" +
+                                                "g[x].getElementsByClassName('item tobet')[0].click();" +
+                                                "}" +
+                                                "}" +
+                                                "})()");
+                                        TextView valA = (TextView) findViewById(R.id.return_team1);
+                                        TextView valB = (TextView) findViewById(R.id.return_team2);
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                                "})()");
+                                        SystemClock.sleep(100);
+                                        valA.setText(gl.getValA());
+                                        valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             returns.removeView(newItem);
@@ -824,29 +883,31 @@ import java.util.Observer;
                             b3.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    returns.addView(gl.getItem3());
-                                    ImageView ii3 = (ImageView)findViewById(R.id.betted_item_3).findViewById(R.id.picture);
-                                    TextView tt3 = (TextView)findViewById(R.id.betted_item_3).findViewById(R.id.price);
-                                    ii3.setImageResource(android.R.color.transparent);
-                                    tt3.setText("");
-                                    tt3.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
-                                            "for(x=0;x<g.length;x++){" +
-                                            "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\""+s+"\"){" +
-                                            "g[x].getElementsByClassName('item tobet')[0].click();" +
-                                            "}" +
-                                            "}" +
-                                            "})()");
-                                    TextView valA = (TextView)findViewById(R.id.return_team1);
-                                    TextView valB = (TextView)findViewById(R.id.return_team2);
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
-                                            "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
-                                            "})()");
-                                    SystemClock.sleep(100);
-                                    valA.setText(gl.getValA());
-                                    valB.setText(gl.getValB());
+                                    try {
+                                        returns.addView(gl.getItem3());
+                                        ImageView ii3 = (ImageView) findViewById(R.id.betted_item_3).findViewById(R.id.picture);
+                                        TextView tt3 = (TextView) findViewById(R.id.betted_item_3).findViewById(R.id.price);
+                                        ii3.setImageResource(android.R.color.transparent);
+                                        tt3.setText("");
+                                        tt3.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
+                                                "for(x=0;x<g.length;x++){" +
+                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\"" + s + "\"){" +
+                                                "g[x].getElementsByClassName('item tobet')[0].click();" +
+                                                "}" +
+                                                "}" +
+                                                "})()");
+                                        TextView valA = (TextView) findViewById(R.id.return_team1);
+                                        TextView valB = (TextView) findViewById(R.id.return_team2);
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                                "})()");
+                                        SystemClock.sleep(100);
+                                        valA.setText(gl.getValA());
+                                        valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
@@ -862,29 +923,31 @@ import java.util.Observer;
                             b4.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    returns.addView(gl.getItem4());
-                                    ImageView ii4 = (ImageView)findViewById(R.id.betted_item_4).findViewById(R.id.picture);
-                                    TextView tt4 = (TextView)findViewById(R.id.betted_item_4).findViewById(R.id.price);
-                                    ii4.setImageResource(android.R.color.transparent);
-                                    tt4.setText("");
-                                    tt4.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
-                                            "for(x=0;x<g.length;x++){" +
-                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\""+s+"\"){" +
-                                                    "g[x].getElementsByClassName('item tobet')[0].click();" +
+                                    try {
+                                        returns.addView(gl.getItem4());
+                                        ImageView ii4 = (ImageView) findViewById(R.id.betted_item_4).findViewById(R.id.picture);
+                                        TextView tt4 = (TextView) findViewById(R.id.betted_item_4).findViewById(R.id.price);
+                                        ii4.setImageResource(android.R.color.transparent);
+                                        tt4.setText("");
+                                        tt4.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
+                                                "for(x=0;x<g.length;x++){" +
+                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\"" + s + "\"){" +
+                                                "g[x].getElementsByClassName('item tobet')[0].click();" +
                                                 "}" +
-                                            "}" +
-                                            "})()");
-                                    TextView valA = (TextView)findViewById(R.id.return_team1);
-                                    TextView valB = (TextView)findViewById(R.id.return_team2);
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
-                                            "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
-                                            "})()");
-                                    SystemClock.sleep(100);
-                                    valA.setText(gl.getValA());
-                                    valB.setText(gl.getValB());
+                                                "}" +
+                                                "})()");
+                                        TextView valA = (TextView) findViewById(R.id.return_team1);
+                                        TextView valB = (TextView) findViewById(R.id.return_team2);
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                                "})()");
+                                        SystemClock.sleep(100);
+                                        valA.setText(gl.getValA());
+                                        valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
@@ -900,71 +963,77 @@ import java.util.Observer;
                             b5.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    returns.addView(gl.getItem5());
-                                    ImageView ii5 = (ImageView)findViewById(R.id.betted_item_5).findViewById(R.id.picture);
-                                    TextView tt5 = (TextView)findViewById(R.id.betted_item_5).findViewById(R.id.price);
-                                    ii5.setImageResource(android.R.color.transparent);
-                                    tt5.setText("");
-                                    tt5.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
-                                            "for(x=0;x<g.length;x++){" +
-                                            "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\""+s+"\"){" +
-                                            "g[x].getElementsByClassName('item tobet')[0].click();" +
-                                            "}" +
-                                            "}" +
-                                            "})()");
-                                    TextView valA = (TextView)findViewById(R.id.return_team1);
-                                    TextView valB = (TextView)findViewById(R.id.return_team2);
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
-                                            "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
-                                            "})()");
-                                    SystemClock.sleep(100);
-                                    valA.setText(gl.getValA());
-                                    valB.setText(gl.getValB());
+                                    try {
+                                        returns.addView(gl.getItem5());
+                                        ImageView ii5 = (ImageView) findViewById(R.id.betted_item_5).findViewById(R.id.picture);
+                                        TextView tt5 = (TextView) findViewById(R.id.betted_item_5).findViewById(R.id.price);
+                                        ii5.setImageResource(android.R.color.transparent);
+                                        tt5.setText("");
+                                        tt5.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
+                                                "for(x=0;x<g.length;x++){" +
+                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\"" + s + "\"){" +
+                                                "g[x].getElementsByClassName('item tobet')[0].click();" +
+                                                "}" +
+                                                "}" +
+                                                "})()");
+                                        TextView valA = (TextView) findViewById(R.id.return_team1);
+                                        TextView valB = (TextView) findViewById(R.id.return_team2);
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                                "})()");
+                                        SystemClock.sleep(100);
+                                        valA.setText(gl.getValA());
+                                        valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
                             returns.removeView(newItem);
                         }else if(t6.getText().toString().equals("")){
                             gl.setItem6(newItem);
+                            returns.removeView(newItem);
                             ImageView i6 = (ImageView)findViewById(R.id.betted_item_6).findViewById(R.id.picture);
                             Ion.with(i6).load(gl.getReturns().get(finalI).getSrc());
                             t6.setText(gl.getReturns().get(finalI).getPrice());
                             String rarity = gl.getReturns().get(finalI).getRarity();
                             t6.setBackgroundColor(itemColor(rarity));
-                            Button b5 = (Button)findViewById(R.id.betted_item_6).findViewById(R.id.selectButton);
-                            b5.setOnClickListener(new View.OnClickListener() {
+                            Button b6 = (Button)findViewById(R.id.betted_item_6).findViewById(R.id.selectButton);
+                            b6.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    returns.addView(gl.getItem4());
-                                    ImageView ii6 = (ImageView)findViewById(R.id.betted_item_6).findViewById(R.id.picture);
-                                    TextView tt6 = (TextView)findViewById(R.id.betted_item_6).findViewById(R.id.price);
-                                    ii6.setImageResource(android.R.color.transparent);
-                                    tt6.setText("");
-                                    tt6.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
-                                            "for(x=0;x<g.length;x++){" +
-                                            "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\""+s+"\"){" +
-                                            "g[x].getElementsByClassName('item tobet')[0].click();" +
-                                            "}" +
-                                            "}" +
-                                            "})()");
-                                    TextView valA = (TextView)findViewById(R.id.return_team1);
-                                    TextView valB = (TextView)findViewById(R.id.return_team2);
-                                    webview.loadUrl("javascript:(function() { " +
-                                            "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
-                                            "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
-                                            "})()");
-                                    SystemClock.sleep(100);
-                                    valA.setText(gl.getValA());
-                                    valB.setText(gl.getValB());
+                                    try {
+                                        returns.addView(gl.getItem6());
+                                        gl.setItem6(null);
+                                        ImageView ii6 = (ImageView) findViewById(R.id.betted_item_6).findViewById(R.id.picture);
+                                        TextView tt6 = (TextView) findViewById(R.id.betted_item_6).findViewById(R.id.price);
+                                        ii6.setImageResource(android.R.color.transparent);
+                                        tt6.setText("");
+                                        tt6.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "var g = document.getElementById('betpoll').getElementsByClassName('left')[0].getElementsByClassName('oitm');" +
+                                                "for(x=0;x<g.length;x++){" +
+                                                "if(g[x].getElementsByClassName('name')[0].childNodes[1].innerText==\"" + s + "\"){" +
+                                                "g[x].getElementsByClassName('item tobet')[0].click();" +
+                                                "}" +
+                                                "}" +
+                                                "})()");
+                                        TextView valA = (TextView) findViewById(R.id.return_team1);
+                                        TextView valB = (TextView) findViewById(R.id.return_team2);
+                                        webview.loadUrl("javascript:(function() { " +
+                                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                                "})()");
+                                        SystemClock.sleep(100);
+                                        valA.setText(gl.getValA());
+                                        valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
-                            returns.removeView(newItem);
+
                         }
                         TextView valA = (TextView)findViewById(R.id.return_team1);
                         TextView valB = (TextView)findViewById(R.id.return_team2);
@@ -1024,7 +1093,7 @@ import java.util.Observer;
                 addButton.setOnLongClickListener(new View.OnLongClickListener(){
                     @Override
                     public boolean onLongClick(View v) {
-                        t.setText(gl.getBackpack().get(finalL).getName() + "\n" + gl.getBackpack().get(finalL).getFloatValue());
+                        t.setText(gl.getBackpack().get(finalL).getName());
                         t.show();
                         return true;
                     }
@@ -1045,8 +1114,8 @@ import java.util.Observer;
                         TextView t2 = (TextView)findViewById(R.id.betted_item_2).findViewById(R.id.price);
                         TextView t3 = (TextView)findViewById(R.id.betted_item_3).findViewById(R.id.price);
                         TextView t4 = (TextView)findViewById(R.id.betted_item_4).findViewById(R.id.price);
-                        TextView t5 = (TextView)findViewById(R.id.betted_item_4).findViewById(R.id.price);
-                        TextView t6 = (TextView)findViewById(R.id.betted_item_4).findViewById(R.id.price);
+                        TextView t5 = (TextView)findViewById(R.id.betted_item_5).findViewById(R.id.price);
+                        TextView t6 = (TextView)findViewById(R.id.betted_item_6).findViewById(R.id.price);
                         if(t1.getText().toString().equals("")){
                             gl.setItem1(newItem);
                             ImageView i1 = (ImageView)findViewById(R.id.betted_item_1).findViewById(R.id.picture);
@@ -1209,7 +1278,7 @@ import java.util.Observer;
                             b5.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    backpack.addView(gl.getItem4());
+                                    backpack.addView(gl.getItem5());
                                     ImageView ii5 = (ImageView)findViewById(R.id.betted_item_5).findViewById(R.id.picture);
                                     TextView tt5 = (TextView)findViewById(R.id.betted_item_5).findViewById(R.id.price);
                                     ii5.setImageResource(android.R.color.transparent);
@@ -1247,7 +1316,7 @@ import java.util.Observer;
                             b6.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    backpack.addView(gl.getItem4());
+                                    backpack.addView(gl.getItem6());
                                     ImageView ii6 = (ImageView)findViewById(R.id.betted_item_6).findViewById(R.id.picture);
                                     TextView tt6 = (TextView)findViewById(R.id.betted_item_6).findViewById(R.id.price);
                                     ii6.setImageResource(android.R.color.transparent);
@@ -1419,5 +1488,30 @@ import java.util.Observer;
             System.out.println("Pushed");
         }
 
+        public Action getAction() {
+            Thing object = new Thing.Builder()
+                    .setName(mTitle)
+                    .setDescription(mDescription)
+                    .setUrl(mUrl)
+                    .build();
 
+            return new Action.Builder(Action.TYPE_VIEW)
+                    .setObject(object)
+                    .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                    .build();
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            mClient.connect();
+            AppIndex.AppIndexApi.start(mClient, getAction());
+        }
+
+        @Override
+        public void onStop() {
+            AppIndex.AppIndexApi.end(mClient, getAction());
+            mClient.disconnect();
+            super.onStop();
+        }
     }

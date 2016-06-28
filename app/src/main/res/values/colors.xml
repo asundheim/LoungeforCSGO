@@ -10,4 +10,5 @@
     <color name="behindimage">#a0a0a0</color>
     <color name="selectedteam">#c88639</color>
     <color name="StatTrak">#cf6a32</color>
+    <color name="background">#e4dfe1</color>
 </resources>

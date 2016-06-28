@@ -19,6 +19,8 @@ public class Globals extends Application {
     public void addMatch(MatchObject m){
         matches_.add(m);
     }
+    public void clearMatches(){matches_.clear();}
+
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -162,4 +164,10 @@ public class Globals extends Application {
 
     /////////////////////////////////////////////////////////////////////////////
 
+    public boolean canBet = false;
+    public void setBetTrue(){canBet = true;}
+    public void setBetFalse(){canBet = false;}
+    public boolean getCanBet(){return canBet; }
+
+    /////////////////////////////////////////////////////////////////////////////
 }
