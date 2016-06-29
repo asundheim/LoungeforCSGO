@@ -126,7 +126,7 @@ import java.util.Observer;
                     /*while (loadmatches == false) {
                     }*/
 
-                    //SystemClock.sleep(4000);
+                    SystemClock.sleep(100);
                     System.out.println("released");
                     for (int i = 0; i < globals.getMatches().size(); i++) {
                         MatchObject m = globals.getMatches().get(i);
@@ -307,7 +307,7 @@ import java.util.Observer;
                             "})()");
                     final Globals gl = (Globals) getApplicationContext();
                     System.out.println("held");
-                    SystemClock.sleep(4000);
+                    SystemClock.sleep(1000);
 
                     System.out.println("continue");
 
@@ -568,7 +568,7 @@ import java.util.Observer;
                         @Override
                         public void onClick(View v) {
                             if(gl.getCanBet()) {
-                                setContentView(R.layout.loading);
+                                //setContentView(R.layout.loading);
                                 loadAnimation();
                                 webview.loadUrl("javascript:(function() { " +
                                         "document.getElementById('placebut').click(); " +
@@ -736,7 +736,7 @@ import java.util.Observer;
                         "window.JSInterface.addReturns(iw[i].childNodes[1].childNodes[1].innerText + \"---\" + iw[i].childNodes[1].childNodes[1].innerText + \"---\" + iw[i].childNodes[3].getElementsByClassName('value')[0].innerText + \"---\" + iw[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + iw[i].childNodes[1].childNodes[4].innerText + \"---\" + iw[i].childNodes[3].childNodes[1].innerText)" +
                     "}" +
                     "})()");
-            SystemClock.sleep(1000);
+            SystemClock.sleep(500);
             final Globals gl = (Globals)getApplicationContext();
             final GridLayout returns = (GridLayout)findViewById(R.id.returns);
             returns.removeAllViews();
@@ -1067,7 +1067,7 @@ import java.util.Observer;
                         "window.JSInterface.addBackpack(iw[i].childNodes[1].childNodes[1].innerText + \"---\" + iw[i].childNodes[1].childNodes[1].innerText + \"---\" + iw[i].childNodes[3].getElementsByClassName('value')[0].innerText + \"---\" + iw[i].childNodes[3].getElementsByClassName('smallimg')[0].src + \"---\" + iw[i].getElementsByClassName('name')[0].getElementsByTagName('I')[0].innerText + \"---\" + iw[i].getElementsByClassName('name')[0].childNodes[3].textContent + \"---\" + iw[i].childNodes[3].childNodes[1].innerText)" +
                     "}" +
                     "})()");
-            SystemClock.sleep(1000);
+            SystemClock.sleep(500);
 
             backpack.removeAllViews();
             for(int i=0;i<gl.getBackpack().size();i++){
@@ -1457,10 +1457,11 @@ import java.util.Observer;
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.login) {
-            setContentView(R.layout.loading);
             webview.loadUrl("javascript:(function() { " +
                     "document.getElementById('login').click(); " +
                     "})()");
+            t.setText("Login");
+            t.show();
             return true;
         }
         if (id==R.id.bets){
