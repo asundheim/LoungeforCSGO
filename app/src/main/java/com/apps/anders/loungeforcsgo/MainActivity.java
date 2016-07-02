@@ -290,7 +290,7 @@ import java.io.File ;
                     setContentView(R.layout.mybets);
                     //setContentView(webview);
                     final GridLayout won = (GridLayout)findViewById(R.id.won);
-
+                    double totalVal = 0;
                     for(int i = 0; i<gl.getWon_items().size(); i++){
                         View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
                         final TextView name = (TextView)newItem.findViewById(R.id.name);
@@ -299,6 +299,7 @@ import java.io.File ;
                         wear.setText(gl.getWon_items().get(i).getWear());
                         TextView price = (TextView)newItem.findViewById(R.id.price);
                         price.setText(gl.getWon_items().get(i).getPrice());
+                        totalVal+=Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getWon_items().get(i).getSrc());
                         ImageView st = (ImageView)newItem.findViewById(R.id.imageView10);
@@ -337,6 +338,7 @@ import java.io.File ;
                         wear.setText(gl.getReturned_items().get(i).getWear());
                         TextView price = (TextView)newItem.findViewById(R.id.price);
                         price.setText(gl.getReturned_items().get(i).getPrice());
+                        totalVal+=Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getReturned_items().get(i).getSrc());
                         ImageView st = (ImageView)newItem.findViewById(R.id.imageView10);
@@ -365,6 +367,8 @@ import java.io.File ;
                         price.setBackgroundColor(itemColor(rarity));
                         returned.addView(newItem);
                     }
+                    TextView totl = (TextView)findViewById(R.id.totalValue);
+                    totl.setText("Total Value $"+(double)Math.round(totalVal * 100d) / 100d);
                     LinearLayout mybets = (LinearLayout)findViewById(R.id.betted_container);
                     for(int i=0;i<gl.getBetted_Matches().size();i++){
                         final View bettedMatchView = LayoutInflater.from(MainActivity.this).inflate(R.layout.betted_match, null);
@@ -444,8 +448,10 @@ import java.io.File ;
                                         "})()");
                             }
                         });*/
+                        double total = 0;
                         val.setText("Expected Return: $" + gl.getBetted_Matches().get(i).getValue().split(" ")[0]);
                         for(int j=1;j<=gl.getBetted_Matches().get(i).getBet_items().size();j++){
+                            total+=Double.parseDouble(gl.getBetted_Matches().get(i).getBet_items().get(j-1).getPrice().substring(2));
                             ImageView imv = (ImageView)bettedMatchView.findViewById(getResources().getIdentifier("betted_item_"+j,"id",getApplicationContext().getPackageName())).findViewById(R.id.picture);
                             Ion.with(imv).load(gl.getBetted_Matches().get(i).getBet_items().get(j-1).getSrc());
                             final int finalI = i;
@@ -460,9 +466,12 @@ import java.io.File ;
                             });
                             TextView prc = (TextView)bettedMatchView.findViewById(getResources().getIdentifier("betted_item_"+j,"id",getApplicationContext().getPackageName())).findViewById((R.id.price));
                             prc.setText(gl.getBetted_Matches().get(i).getBet_items().get(j-1).getPrice());
+
                             String rarity = gl.getBetted_Matches().get(i).getBet_items().get(j-1).getRarity();
                             prc.setBackgroundColor(itemColor(rarity));
                         }
+                        TextView valueBet = (TextView)bettedMatchView.findViewById(R.id.betted_valuebet);
+                        valueBet.setText((double)Math.round(total * 100d) / 100d==0.0?"Item Draft/Load Error":"Value Bet $"+(double)Math.round(total * 100d) / 100d);
                         ImageView b1 = (ImageView)bettedMatchView.findViewById(R.id.team_1_image);
                         ImageView b2 = (ImageView)bettedMatchView.findViewById(R.id.team_2_image);
                         Ion.with(b1).load("https://csgolounge.com/img/teams/"+gl.getBetted_Matches().get(i).getTeam_1()+".jpg");
@@ -489,6 +498,21 @@ import java.io.File ;
                         }*/
                         mybets.addView(bettedMatchView);
                     }
+                    final SwipeRefreshLayout swipe = (SwipeRefreshLayout)findViewById(R.id.reloadMyBets);
+                    swipe.setOnRefreshListener(
+                            new SwipeRefreshLayout.OnRefreshListener() {
+                                @Override
+                                public void onRefresh() {
+                                    gl.clearReturned();
+                                    gl.clearBetted_Matches();
+                                    gl.clearWon();
+                                    webview.reload();
+                                    // This method performs the actual data-refresh operation.
+                                    // The method calls setRefreshing(false) when it's finished
+                                    swipe.setRefreshing(false);
+                                }
+                            }
+                    );
                 }else{
 
                     webview.loadUrl("javascript:(function() { " +

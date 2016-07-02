@@ -686,4 +686,12 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Value Bet: $XX.XX"
+        android:id="@+id/betted_valuebet"
+        android:layout_below="@+id/space2"
+        android:layout_alignRight="@+id/betted_item_6" />
+
 </RelativeLayout>
