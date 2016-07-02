@@ -3,15 +3,12 @@
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Color;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,22 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.NativeAd;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.koushikdutta.ion.Ion;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
+import java.io.File ;
 /* TODO
      - My bets
         - Get rid of waiting x seconds for load and instead intelligently load data from JS
@@ -56,26 +42,16 @@ import java.util.Observer;
         - Loading notification for loading backpack
  */
 
-//import com.koushikdutta.ion.Ion;
-
     public class MainActivity extends AppCompatActivity {
     WebView webview;
     Toast t;
     GoBetween go;
     InterstitialAd mInterstitialAd;
-        private GoogleApiClient mClient;
-        private Uri mUrl;
-        private String mTitle;
-        private String mDescription;
     boolean loadmatches = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        mUrl = Uri.parse("http://csgolounge.com");
-        mTitle = "CSGOLounge for Android";
-        mDescription = "Use csgolounge on your Android phone";
         /*mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.setAdListener(new AdListener() {
@@ -1487,32 +1463,5 @@ import java.util.Observer;
 
         public void pressedMatch(View view) {
             System.out.println("Pushed");
-        }
-
-        public Action getAction() {
-            Thing object = new Thing.Builder()
-                    .setName(mTitle)
-                    .setDescription(mDescription)
-                    .setUrl(mUrl)
-                    .build();
-
-            return new Action.Builder(Action.TYPE_VIEW)
-                    .setObject(object)
-                    .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                    .build();
-        }
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            mClient.connect();
-            AppIndex.AppIndexApi.start(mClient, getAction());
-        }
-
-        @Override
-        public void onStop() {
-            AppIndex.AppIndexApi.end(mClient, getAction());
-            mClient.disconnect();
-            super.onStop();
         }
     }
