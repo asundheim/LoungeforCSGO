@@ -8,8 +8,8 @@ android {
         applicationId "com.apps.anders.loungeforcsgo"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
-        versionName "1.2.1"
+        versionCode 7
+        versionName "1.4"
     }
     buildTypes {
         release {
@@ -30,5 +30,6 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.0.2'
     compile 'com.google.firebase:firebase-ads:9.0.2'
     compile 'com.google.android.gms:play-services-appindexing:9.0.2'
+    compile 'com.github.medyo:android-about-page:1.0.9'
 }
 apply plugin: 'com.google.gms.google-services'

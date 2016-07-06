@@ -20,4 +20,8 @@
         android:id="@+id/logout"
         android:visible="true"
         android:enabled="true" />
+    <item android:title="About"
+        android:id="@+id/about"
+        android:visible="true"
+        android:enabled="true" />
 </menu>

@@ -183,10 +183,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="XX%"
         android:id="@+id/betted_odds_2"
-        android:layout_alignBaseline="@+id/betted_team_2_button"
-        android:layout_alignBottom="@+id/betted_team_2_button"
+        android:layout_below="@+id/betted_time"
         android:layout_toLeftOf="@+id/imageView4"
-        android:layout_toStartOf="@+id/imageView4" />
+        android:layout_toStartOf="@+id/imageView4"
+        android:layout_marginRight="5dp" />
 
     <TextView
         android:layout_width="166dp"

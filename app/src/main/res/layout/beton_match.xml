@@ -480,11 +480,21 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="10dp"
         android:id="@+id/space2"
-        android:layout_below="@+id/betted_item_1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/totalValue"
+        android:layout_alignRight="@+id/imageView9"
+        android:layout_alignEnd="@+id/imageView9" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Value: $00.00"
+        android:id="@+id/totalValue"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:layout_width="wrap_content"
@@ -600,6 +610,132 @@
         android:layout_alignBottom="@+id/switch_backpack"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/betted_item_1"
+        android:id="@+id/space3" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/space3"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Covert: $00.00"
+            android:id="@+id/betted_covert"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/covert" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Restricted: $00.00"
+            android:id="@+id/betted_restricted"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/betted_covert"
+            android:gravity="center"
+            android:textColor="@color/restricted" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Classified: $00.00"
+            android:id="@+id/betted_classified"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/betted_covert"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/classified" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Mil-Spec: $00.00"
+            android:id="@+id/betted_milspec"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/betted_classified"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/milspec" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Industrial: $00.00"
+            android:id="@+id/betted_industrial"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/betted_covert"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/industrial" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Other: $00.00"
+            android:id="@+id/betted_default"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/betted_industrial"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Consumer: $00.00"
+            android:id="@+id/betted_consumer"
+            android:layout_below="@+id/betted_restricted"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/consumer" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5%: $XX.XX"
+        android:id="@+id/smallBet"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/mediumBet"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10%: $XX.XX"
+        android:id="@+id/mediumBet"
+        android:layout_below="@+id/totalValue"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20%: $XX.XX"
+        android:id="@+id/largeBet"
+        android:layout_alignBottom="@+id/mediumBet"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dp" />
 
 
 </RelativeLayout>

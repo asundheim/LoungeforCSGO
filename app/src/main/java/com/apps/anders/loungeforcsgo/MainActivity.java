@@ -1,11 +1,15 @@
     package com.apps.anders.loungeforcsgo;
 
 import android.app.DownloadManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -27,11 +32,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.koushikdutta.ion.Ion;
 
 import java.io.File ;
+
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
 /* TODO
      - My bets
         - Get rid of waiting x seconds for load and instead intelligently load data from JS
@@ -40,6 +51,7 @@ import java.io.File ;
      - Match pages
         - Get rid of waiting x seconds for load and instead intelligently load data from JS
         - Loading notification for loading backpack
+        https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=QRP5HUMTSXE3U&lc=US&item_name=CSGOLounge%20for%20Android&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
  */
 
     public class MainActivity extends AppCompatActivity {
@@ -48,10 +60,26 @@ import java.io.File ;
     GoBetween go;
     InterstitialAd mInterstitialAd;
     boolean loadmatches = false;
+       /* IInAppBillingService mService;
+        ServiceConnection mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mService = null;
+            }
+
+            @Override
+            public void onServiceConnected(ComponentName name,
+                                           IBinder service) {
+                mService = IInAppBillingService.Stub.asInterface(service);
+            }
+        };*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        /*Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);*/
         /*mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.setAdListener(new AdListener() {
@@ -62,9 +90,10 @@ import java.io.File ;
         });*/
         /*requestNewInterstitial();*/
         setContentView(R.layout.loading);
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8215399930412333~7017340401");
         loadAnimation();
         t = Toast.makeText(this,"",Toast.LENGTH_SHORT);
-        /*MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");*/
+
         webview = new WebView(this);
         webview.loadUrl("http://csgolounge.com/");
         //webview.setWebViewClient(new WebViewClient());
@@ -73,7 +102,8 @@ import java.io.File ;
         webview.getSettings().setJavaScriptEnabled(true);
         webview.addJavascriptInterface(jsInterface, "JSInterface");
         //document.getElementsByClassName('matchleft')[i].getElementsByClassName('format')[0].textContent
-
+        WebSettings settings = webview.getSettings();
+        settings.setDomStorageEnabled(true);
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -113,9 +143,9 @@ import java.io.File ;
                         mInterstitialAd.show();
                     }*/
                     setContentView(R.layout.container);
-                    /*AdView mAdView = (AdView) findViewById(R.id.adView);
-                    AdRequest adRequest = new AdRequest.Builder().build();
-                    mAdView.loadAd(adRequest);*/
+                    AdView mAdView = (AdView) findViewById(R.id.adView);
+                    AdRequest adRequest = new AdRequest.Builder().setGender(AdRequest.GENDER_MALE).build();
+                    mAdView.loadAd(adRequest);
                     LinearLayout container = (LinearLayout) findViewById(R.id.linear_container);
                     for (int i = 0; i < 21; i++) {
                         View newView = LayoutInflater.from(MainActivity.this).inflate(R.layout.new_match, null);
@@ -221,6 +251,8 @@ import java.io.File ;
                                 @Override
                                 public void onRefresh() {
                                     globals.clearMatches();
+                                    t.setText("Reloading, Please Wait");
+                                    t.show();
                                     webview.reload();
                                     // This method performs the actual data-refresh operation.
                                     // The method calls setRefreshing(false) when it's finished
@@ -291,6 +323,13 @@ import java.io.File ;
                     //setContentView(webview);
                     final GridLayout won = (GridLayout)findViewById(R.id.won);
                     double totalVal = 0;
+                    double classified = 0;
+                    double covert = 0;
+                    double restricted = 0;
+                    double milspec = 0;
+                    double consumer = 0;
+                    double industrial = 0;
+                    double other = 0;
                     for(int i = 0; i<gl.getWon_items().size(); i++){
                         View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
                         final TextView name = (TextView)newItem.findViewById(R.id.name);
@@ -300,6 +339,29 @@ import java.io.File ;
                         TextView price = (TextView)newItem.findViewById(R.id.price);
                         price.setText(gl.getWon_items().get(i).getPrice());
                         totalVal+=Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                        switch(gl.getWon_items().get(i).getRarity()){
+                            case " Industrial":
+                                industrial+=Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Restricted":
+                                restricted += Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Classified":
+                                classified += Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Mil-Spec":
+                                milspec += Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Consumer":
+                                consumer += Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Covert":
+                                covert += Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                            default:
+                                other += Double.parseDouble(gl.getWon_items().get(i).getPrice().substring(2));
+                                break;
+                        }
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getWon_items().get(i).getSrc());
                         ImageView st = (ImageView)newItem.findViewById(R.id.imageView10);
@@ -339,6 +401,29 @@ import java.io.File ;
                         TextView price = (TextView)newItem.findViewById(R.id.price);
                         price.setText(gl.getReturned_items().get(i).getPrice());
                         totalVal+=Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                        switch(gl.getReturned_items().get(i).getRarity()){
+                            case " Industrial":
+                                industrial += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Restricted":
+                                restricted += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Classified":
+                                classified += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Mil-Spec":
+                                milspec += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Consumer":
+                                consumer += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                            case " Covert":
+                                covert += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                            default:
+                                other += Double.parseDouble(gl.getReturned_items().get(i).getPrice().substring(2));
+                                break;
+                        }
                         ImageView image = (ImageView)newItem.findViewById(R.id.picture);
                         Ion.with(image).load(gl.getReturned_items().get(i).getSrc());
                         ImageView st = (ImageView)newItem.findViewById(R.id.imageView10);
@@ -369,6 +454,20 @@ import java.io.File ;
                     }
                     TextView totl = (TextView)findViewById(R.id.totalValue);
                     totl.setText("Total Value $"+(double)Math.round(totalVal * 100d) / 100d);
+                    TextView cov = (TextView)findViewById(R.id.betted_covert);
+                    cov.setText("Covert: $"+(double)Math.round(covert * 100d) / 100d);
+                    TextView clas = (TextView)findViewById(R.id.betted_classified);
+                    clas.setText("Classified: $"+(double)Math.round(classified * 100d) / 100d);
+                    TextView res = (TextView)findViewById(R.id.betted_restricted);
+                    res.setText("Restricted: $"+(double)Math.round(restricted * 100d) / 100d);
+                    TextView mil = (TextView)findViewById(R.id.betted_milspec);
+                    mil.setText("Mil-Spec: $"+(double)Math.round(milspec * 100d) / 100d);
+                    TextView ind = (TextView)findViewById(R.id.betted_industrial);
+                    ind.setText("Industrial: $"+(double)Math.round(industrial * 100d) / 100d);
+                    TextView con = (TextView)findViewById(R.id.betted_consumer);
+                    con.setText("Consumer: $"+(double)Math.round(consumer * 100d) / 100d);
+                    TextView oth = (TextView)findViewById(R.id.betted_default);
+                    oth.setText("Other: $"+(double)Math.round(other * 100d) / 100d);
                     LinearLayout mybets = (LinearLayout)findViewById(R.id.betted_container);
                     for(int i=0;i<gl.getBetted_Matches().size();i++){
                         final View bettedMatchView = LayoutInflater.from(MainActivity.this).inflate(R.layout.betted_match, null);
@@ -506,6 +605,8 @@ import java.io.File ;
                                     gl.clearReturned();
                                     gl.clearBetted_Matches();
                                     gl.clearWon();
+                                    t.setText("Reloading, Please Wait");
+                                    t.show();
                                     webview.reload();
                                     // This method performs the actual data-refresh operation.
                                     // The method calls setRefreshing(false) when it's finished
@@ -554,7 +655,7 @@ import java.io.File ;
                         @Override
                         public void onClick(View v) {
                             webview.loadUrl("javascript:(function() { " +
-                                    "document.getElementById('team')[1].click(); " +
+                                    "document.getElementsByClassName('team')[1].click(); " +
                                     "})()");
                             ImageView t1 = (ImageView)findViewById(R.id.imageView8);
                             ImageView t2 = (ImageView)findViewById(R.id.imageView9);
@@ -567,14 +668,16 @@ import java.io.File ;
                     placebet.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(gl.getCanBet()) {
+                                System.out.println("ffffffuuuu");
+                            t.setText("Place Bet");
+                            t.show();
                                 //setContentView(R.layout.loading);
-                                loadAnimation();
+                                //loadAnimation();
                                 webview.loadUrl("javascript:(function() { " +
                                         "document.getElementById('placebut').click(); " +
                                         "})()");
                                 gl.setBetFalse();
-                            }
+
                         }
                     });
                     TextView team_1 = (TextView)findViewById(R.id.betted_team_1);
@@ -682,6 +785,8 @@ import java.io.File ;
                                 webview.loadUrl("javascript:(function() { " +
                                         "document.getElementsByClassName('tab')[0].click(); " +
                                         "})()");
+                                t.setText("Loading");
+                                t.show();
                                 loadBackpack();
                                 TextView t1 = (TextView) findViewById(R.id.betted_item_1).findViewById(R.id.price);
                                 TextView t2 = (TextView) findViewById(R.id.betted_item_2).findViewById(R.id.price);
@@ -740,6 +845,14 @@ import java.io.File ;
             final Globals gl = (Globals)getApplicationContext();
             final GridLayout returns = (GridLayout)findViewById(R.id.returns);
             returns.removeAllViews();
+            double totalVal = 0;
+            double classified = 0;
+            double covert = 0;
+            double restricted = 0;
+            double milspec = 0;
+            double consumer = 0;
+            double industrial = 0;
+            double other = 0;
             for(int i=0;i<gl.getReturns().size();i++){
                 final View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
                 TextView name = (TextView)newItem.findViewById(R.id.name);
@@ -754,6 +867,31 @@ import java.io.File ;
                 if(gl.getReturns().get(i).getST().equals("ST")){
                     st.setBackgroundColor(getResources().getColor(R.color.StatTrak));
                 }
+                totalVal+=Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                switch(gl.getReturns().get(i).getRarity()){
+                    case " Industrial":
+                        industrial += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                    case " Restricted":
+                        restricted += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                    case " Classified":
+                        classified += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                    case " Mil-Spec":
+                        milspec += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                    case " Consumer":
+                        consumer += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                    case " Covert":
+                        covert += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                    default:
+                        other += Double.parseDouble(gl.getReturns().get(i).getPrice().substring(2));
+                        break;
+                }
+
                 final int finalL = i;
                 image.setOnTouchListener(new View.OnTouchListener(){
                     @Override
@@ -1051,6 +1189,28 @@ import java.io.File ;
                 price.setBackgroundColor(itemColor(rarity));
                 returns.addView(newItem);
             }
+            TextView totl = (TextView)findViewById(R.id.totalValue);
+            totl.setText("Total Value $"+(double)Math.round(totalVal * 100d) / 100d);
+            TextView cov = (TextView)findViewById(R.id.betted_covert);
+            cov.setText("Covert: $"+(double)Math.round(covert * 100d) / 100d);
+            TextView clas = (TextView)findViewById(R.id.betted_classified);
+            clas.setText("Classified: $"+(double)Math.round(classified * 100d) / 100d);
+            TextView res = (TextView)findViewById(R.id.betted_restricted);
+            res.setText("Restricted: $"+(double)Math.round(restricted * 100d) / 100d);
+            TextView mil = (TextView)findViewById(R.id.betted_milspec);
+            mil.setText("Mil-Spec: $"+(double)Math.round(milspec * 100d) / 100d);
+            TextView ind = (TextView)findViewById(R.id.betted_industrial);
+            ind.setText("Industrial: $"+(double)Math.round(industrial * 100d) / 100d);
+            TextView con = (TextView)findViewById(R.id.betted_consumer);
+            con.setText("Consumer: $"+(double)Math.round(consumer * 100d) / 100d);
+            TextView oth = (TextView)findViewById(R.id.betted_default);
+            oth.setText("Other: $"+(double)Math.round(other * 100d) / 100d);
+            TextView smallBet = (TextView)findViewById(R.id.smallBet);
+            smallBet.setText("5%: $"+(double)Math.round((totalVal*.05) * 100d) / 100d);
+            TextView mediumBet = (TextView)findViewById(R.id.mediumBet);
+            mediumBet.setText("10%: $"+(double)Math.round((totalVal*.1) * 100d) / 100d);
+            TextView largeBet = (TextView)findViewById(R.id.largeBet);
+            largeBet.setText("20%: $"+(double)Math.round((totalVal*.2) * 100d) / 100d);
         }
         void loadBackpack(){
             final Globals gl = (Globals)getApplicationContext();
@@ -1068,7 +1228,14 @@ import java.io.File ;
                     "}" +
                     "})()");
             SystemClock.sleep(500);
-
+            double totalVal = 0;
+            double classified = 0;
+            double covert = 0;
+            double restricted = 0;
+            double milspec = 0;
+            double consumer = 0;
+            double industrial = 0;
+            double other = 0;
             backpack.removeAllViews();
             for(int i=0;i<gl.getBackpack().size();i++){
                 final View newItem = LayoutInflater.from(MainActivity.this).inflate(R.layout.item, null);
@@ -1083,6 +1250,31 @@ import java.io.File ;
                 ImageView st = (ImageView)newItem.findViewById(R.id.imageView10);
                 if(gl.getBackpack().get(i).getST().equals("ST")){
                     st.setBackgroundColor(getResources().getColor(R.color.StatTrak));
+                }
+                totalVal+=Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+
+                switch(gl.getBackpack().get(i).getRarity()){
+                    case " Industrial":
+                        industrial += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
+                    case " Restricted":
+                        restricted += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
+                    case " Classified":
+                        classified += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
+                    case " Mil-Spec":
+                        milspec += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
+                    case " Consumer":
+                        consumer += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
+                    case " Covert":
+                        covert += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
+                    default:
+                        other += Double.parseDouble(gl.getBackpack().get(i).getPrice().substring(2));
+                        break;
                 }
                 final int finalL = i;
 
@@ -1099,6 +1291,7 @@ import java.io.File ;
                     }
                 });
                 addButton.setOnClickListener(new View.OnClickListener() {
+
                     final String s = gl.getBackpack().get(finalI).getName();
                     @Override
                     public void onClick(View v) {
@@ -1110,6 +1303,15 @@ import java.io.File ;
                                 "}" +
                                 "}" +
                                 "})()");
+                        TextView valA = (TextView)findViewById(R.id.return_team1);
+                        TextView valB = (TextView)findViewById(R.id.return_team2);
+                        webview.loadUrl("javascript:(function() { " +
+                                "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
+                                "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
+                                "})()");
+                        SystemClock.sleep(100);
+                        valA.setText(gl.getValA());
+                        valB.setText(gl.getValB());
                         TextView t1 = (TextView)findViewById(R.id.betted_item_1).findViewById(R.id.price);
                         TextView t2 = (TextView)findViewById(R.id.betted_item_2).findViewById(R.id.price);
                         TextView t3 = (TextView)findViewById(R.id.betted_item_3).findViewById(R.id.price);
@@ -1127,6 +1329,7 @@ import java.io.File ;
                             b1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    try{
                                     backpack.addView(gl.getItem1());
                                     ImageView ii1 = (ImageView)findViewById(R.id.betted_item_1).findViewById(R.id.picture);
                                     TextView tt1 = (TextView)findViewById(R.id.betted_item_1).findViewById(R.id.price);
@@ -1150,6 +1353,7 @@ import java.io.File ;
                                     SystemClock.sleep(100);
                                     valA.setText(gl.getValA());
                                     valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             backpack.removeView(newItem);
@@ -1164,6 +1368,7 @@ import java.io.File ;
                             b2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    try{
                                     backpack.addView(gl.getItem2());
                                     ImageView ii2 = (ImageView)findViewById(R.id.betted_item_2).findViewById(R.id.picture);
                                     TextView tt2 = (TextView)findViewById(R.id.betted_item_2).findViewById(R.id.price);
@@ -1187,6 +1392,7 @@ import java.io.File ;
                                     SystemClock.sleep(100);
                                     valA.setText(gl.getValA());
                                     valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             backpack.removeView(newItem);
@@ -1202,6 +1408,7 @@ import java.io.File ;
                             b3.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    try{
                                     backpack.addView(gl.getItem3());
                                     ImageView ii3 = (ImageView)findViewById(R.id.betted_item_3).findViewById(R.id.picture);
                                     TextView tt3 = (TextView)findViewById(R.id.betted_item_3).findViewById(R.id.price);
@@ -1225,6 +1432,7 @@ import java.io.File ;
                                     SystemClock.sleep(100);
                                     valA.setText(gl.getValA());
                                     valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
@@ -1240,6 +1448,7 @@ import java.io.File ;
                             b4.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    try{
                                     backpack.addView(gl.getItem4());
                                     ImageView ii4 = (ImageView)findViewById(R.id.betted_item_4).findViewById(R.id.picture);
                                     TextView tt4 = (TextView)findViewById(R.id.betted_item_4).findViewById(R.id.price);
@@ -1263,6 +1472,7 @@ import java.io.File ;
                                     SystemClock.sleep(100);
                                     valA.setText(gl.getValA());
                                     valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
@@ -1278,6 +1488,7 @@ import java.io.File ;
                             b5.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    try{
                                     backpack.addView(gl.getItem5());
                                     ImageView ii5 = (ImageView)findViewById(R.id.betted_item_5).findViewById(R.id.picture);
                                     TextView tt5 = (TextView)findViewById(R.id.betted_item_5).findViewById(R.id.price);
@@ -1301,6 +1512,7 @@ import java.io.File ;
                                     SystemClock.sleep(100);
                                     valA.setText(gl.getValA());
                                     valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
@@ -1316,6 +1528,7 @@ import java.io.File ;
                             b6.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    try{
                                     backpack.addView(gl.getItem6());
                                     ImageView ii6 = (ImageView)findViewById(R.id.betted_item_6).findViewById(R.id.picture);
                                     TextView tt6 = (TextView)findViewById(R.id.betted_item_6).findViewById(R.id.price);
@@ -1339,13 +1552,14 @@ import java.io.File ;
                                     SystemClock.sleep(100);
                                     valA.setText(gl.getValA());
                                     valB.setText(gl.getValB());
+                                    }catch(IllegalStateException e){}
                                 }
                             });
                             //returns.removeViewAt(Integer.parseInt(addButton.getText().toString()));
                             backpack.removeView(newItem);
                         }
-                        TextView valA = (TextView)findViewById(R.id.return_team1);
-                        TextView valB = (TextView)findViewById(R.id.return_team2);
+                        valA = (TextView)findViewById(R.id.return_team1);
+                        valB = (TextView)findViewById(R.id.return_team2);
                         webview.loadUrl("javascript:(function() { " +
                                 "window.JSInterface.updateA(document.getElementById('teamA').innerText + \" for \" + document.getElementsByClassName('yourVal')[0].innerText);" +
                                 "window.JSInterface.updateB(document.getElementById('teamB').innerText + \" for \" + document.getElementsByClassName('yourVal')[1].innerText);" +
@@ -1360,6 +1574,28 @@ import java.io.File ;
                 price.setBackgroundColor(itemColor(rarity));
                 backpack.addView(newItem);
             }
+            TextView totl = (TextView)findViewById(R.id.totalValue);
+            totl.setText("Total Value $"+(double)Math.round(totalVal * 100d) / 100d);
+            TextView cov = (TextView)findViewById(R.id.betted_covert);
+            cov.setText("Covert: $"+(double)Math.round(covert * 100d) / 100d);
+            TextView clas = (TextView)findViewById(R.id.betted_classified);
+            clas.setText("Classified: $"+(double)Math.round(classified * 100d) / 100d);
+            TextView res = (TextView)findViewById(R.id.betted_restricted);
+            res.setText("Restricted: $"+(double)Math.round(restricted * 100d) / 100d);
+            TextView mil = (TextView)findViewById(R.id.betted_milspec);
+            mil.setText("Mil-Spec: $"+(double)Math.round(milspec * 100d) / 100d);
+            TextView ind = (TextView)findViewById(R.id.betted_industrial);
+            ind.setText("Industrial: $"+(double)Math.round(industrial * 100d) / 100d);
+            TextView con = (TextView)findViewById(R.id.betted_consumer);
+            con.setText("Consumer: $"+(double)Math.round(consumer * 100d) / 100d);
+            TextView oth = (TextView)findViewById(R.id.betted_default);
+            oth.setText("Other: $"+(double)Math.round(other * 100d) / 100d);
+            TextView smallBet = (TextView)findViewById(R.id.smallBet);
+            smallBet.setText("5%: $"+(double)Math.round((totalVal*.05) * 100d) / 100d);
+            TextView mediumBet = (TextView)findViewById(R.id.mediumBet);
+            mediumBet.setText("10%: $"+(double)Math.round((totalVal*.1) * 100d) / 100d);
+            TextView largeBet = (TextView)findViewById(R.id.largeBet);
+            largeBet.setText("20%: $"+(double)Math.round((totalVal*.2) * 100d) / 100d);
         }
         int itemColor(String color){
             switch(color){
@@ -1414,12 +1650,7 @@ import java.io.File ;
 
         }
         public void loadAnimation(){
-            RotateAnimation rotateAnimation = new RotateAnimation(30, 90,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(10000);
-            ImageView ro = (ImageView)findViewById(R.id.imageView7);
-            rotateAnimation.setRepeatCount(Animation.INFINITE);
-            ro.startAnimation(rotateAnimation);
+
         }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1482,10 +1713,34 @@ import java.io.File ;
         if (id==R.id.test){
             setContentView(webview);
         }
+        if (id==R.id.about){
+            setContentView(R.layout.about);
+            LinearLayout main = (LinearLayout)findViewById(R.id.main);
+            Element versionElement = new Element();
+            versionElement.setTitle("Version 1.4");
+            Element donateElement = new Element();
+            donateElement.setTitle("I'm poor, please donate here");
+            donateElement.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=QRP5HUMTSXE3U&lc=US&item_name=CSGOLounge%20for%20Android&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted")));
+            View aboutPage = new AboutPage(this)
+                    .setDescription("An Android application for CSGOLounge")
+                    .addItem(versionElement)
+                    .setImage(R.mipmap.ic_launcher)
+                    .addEmail("andersundheim@gmail.com")
+                    .addItem(donateElement)
+                    .create();
+            main.addView(aboutPage);
+    }
         return super.onOptionsItemSelected(item);
     }
 
         public void pressedMatch(View view) {
             System.out.println("Pushed");
         }
+        /*@Override
+        public void onDestroy() {
+            super.onDestroy();
+            if (mService != null) {
+                unbindService(mServiceConn);
+            }
+        }*/
     }
